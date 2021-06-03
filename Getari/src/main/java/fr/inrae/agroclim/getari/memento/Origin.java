@@ -13,7 +13,7 @@ public class Origin {
 		return evaluation;
 	}
 
-	public void setFakeData(Evaluation evaluation) {
+	public void setEvaluation(Evaluation evaluation) {
 		this.evaluation = evaluation;
 	}
 

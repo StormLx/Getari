@@ -5,6 +5,9 @@ import java.util.List;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -12,14 +15,14 @@ public class History {
 	/**
 	 * List de memento.
 	 */
-	private List<Memento> history;
+	private ObservableList<Memento> history;
 	/**
 	 * IntegerProperty to add listener.
 	 */
 	private final IntegerProperty currentState;
 
 	public History() {
-		this.history = new ArrayList<>();
+		this.history = FXCollections.observableArrayList();
 		currentState = new SimpleIntegerProperty();
 	}
 
@@ -57,6 +60,10 @@ public class History {
 
 	public final IntegerProperty currentStateProperty() {
 		return currentState;
+	}
+	
+	public void addChangeListener(ListChangeListener<Memento> listener) {
+		history.addListener(listener);
 	}
 
 	public final int getCurrentState() {

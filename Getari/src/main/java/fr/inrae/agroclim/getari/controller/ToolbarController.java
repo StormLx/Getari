@@ -119,25 +119,15 @@ public class ToolbarController extends AbstractController implements Initializab
 	 */
 	@FXML
 	private HBox root;
-	/**
-	 * Text field
-	 */
-	@FXML
-	private TextField addName;
-	/**
-	 * Text label
-	 */
-	@FXML
-	private Label myLabel;
 
 	/**
 	 * Current state.
 	 */
-	private Origin origin;
+	private Origin origin = new Origin();
 	/**
 	 * History of actions.
 	 */
-	private History history;;
+	private History history;
 	/**
 	 * undo list.
 	 */
@@ -146,10 +136,6 @@ public class ToolbarController extends AbstractController implements Initializab
 	 * Observable redo list.
 	 */
 	private List<MenuItem> redoList = new ArrayList<>();
-	/**
-	 * FakeData.
-	 */
-	private FakeData data = new FakeData();
 	/**
 	 * bean
 	 */
@@ -171,19 +157,6 @@ public class ToolbarController extends AbstractController implements Initializab
 	public void initialize(final URL url, final ResourceBundle rb) {
 
 		// Undo SplitButton
-		history.currentStateProperty().addListener(new ChangeListener() {
-
-			@Override
-			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-				if (Integer.parseInt(oldValue.toString()) < Integer.parseInt(newValue.toString())) {
-					LOGGER.trace("New memento object added to the list");
-				} else {
-					LOGGER.trace("Last memento object has been removed from the list");
-				}
-
-			}
-
-		});
 
 		Tooltip undoTooltip = new Tooltip("Annuler la dernière opération.");
 		undoBtn.setTooltip(undoTooltip);
@@ -201,16 +174,13 @@ public class ToolbarController extends AbstractController implements Initializab
 
 	@FXML
 	private void onUndoAction(final ActionEvent event) {
-		origin.restore(history.undo());
-		redoList.add(undoList.get(undoList.size() - 1));
-		undoList.remove(undoList.size() - 1);
-		undoBtn.getItems().clear();
-		undoBtn.getItems().addAll(undoList);
-		redoBtn.getItems().clear();
-		redoBtn.getItems().addAll(redoList);
-		myLabel.setText(FakeSquare
-				.squareA(Integer.parseInt(history.getMemento(
-						history.getCurrentState()).getFakeData().getName())) + "");
+		LOGGER.trace("Size from undo: {}", history.getSize());
+		/*
+		 * origin.restore(history.undo()); redoList.add(undoList.get(undoList.size() -
+		 * 1)); undoList.remove(undoList.size() - 1); undoBtn.getItems().clear();
+		 * undoBtn.getItems().addAll(undoList); redoBtn.getItems().clear();
+		 * redoBtn.getItems().addAll(redoList);
+		 */
 	}
 
 	/**
@@ -226,37 +196,24 @@ public class ToolbarController extends AbstractController implements Initializab
 		undoBtn.getItems().addAll(undoList);
 		redoBtn.getItems().clear();
 		redoBtn.getItems().addAll(redoList);
-		myLabel.setText(FakeSquare
-				.squareA(Integer.parseInt(history.getMemento(
-						history.getCurrentState()).getFakeData().getName())) + "");
 	}
 
 	/**
 	 * @param event onAction of button
 	 */
-	@FXML
-	private void onAddObject(final ActionEvent event) {
-
-		if (history.getCurrentState() < history.getSize() - 1) {
-			for (int i = history.getCurrentState(); i < history.getSize(); i++) {
-				history.removeMemento(history.getSize() - 1);
-			}
-			redoList.clear();
-		}
-		String name = addName.getText();
-		int n = Integer.parseInt(name);
-		FakeData newData = new FakeData();
-		newData.setName(name);
-		origin.setFakeData(newData);
-		history.addMemento(origin.save());
-		MenuItem item1 = new MenuItem(newData.getName() + " action");
-		undoList.add(item1);
-		myLabel.setText(FakeSquare.squareA(n) + "");
-		undoBtn.getItems().clear();
-		undoBtn.getItems().addAll(undoList);
-		redoBtn.getItems().clear();
-	}
-
+	/*
+	 * @FXML private void onAddObject(final ActionEvent event) {
+	 * 
+	 * if (history.getCurrentState() < history.getSize() - 1) { for (int i =
+	 * history.getCurrentState(); i < history.getSize(); i++) {
+	 * history.removeMemento(history.getSize() - 1); } redoList.clear(); } int n =
+	 * Integer.parseInt(name); FakeData newData = new FakeData();
+	 * newData.setName(name); origin.setFakeData(newData);
+	 * history.addMemento(origin.save()); MenuItem item1 = new
+	 * MenuItem(newData.getName() + " action"); undoList.add(item1);
+	 * myLabel.setText(FakeSquare.squareA(n) + ""); undoBtn.getItems().clear();
+	 * undoBtn.getItems().addAll(undoList); redoBtn.getItems().clear(); }
+	 */
 	/**
 	 * @param event onAction of button
 	 */
@@ -294,4 +251,20 @@ public class ToolbarController extends AbstractController implements Initializab
 		newCmd.run();
 	}
 
+	public void setHistory(History history) {
+		this.history = history;
+		history.addChangeListener(change -> { // écoute un changement de taille de la liste
+			LOGGER.trace();
+			change.getAddedSize();
+		});
+		history.currentStateProperty().addListener((obs, oldValue, newValue) -> {
+
+			if (oldValue.intValue() < newValue.intValue()) {
+				LOGGER.trace("New memento object added to the list");
+				//TODO menuItem
+			} else {
+				LOGGER.trace("Last memento object has been removed from the list");
+			}
+		});
+	}
 }

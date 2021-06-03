@@ -172,11 +172,12 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
 	/**
 	 * Current state.
 	 */
-	Origin origin = new Origin();
+	private Origin origin = new Origin();
 	/**
 	 * History of actions.
 	 */
-	History history = new History();
+	@Getter
+	private History history = new History();
 
     /**
      * Constructor.
@@ -388,6 +389,7 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         final ToolbarView toolbarView = new ToolbarView();
         final Parent pane = toolbarView.build();
         final ToolbarController controller = toolbarView.getController();
+        controller.setHistory(getHistory());
         controller.setClearCmd(() -> onClearAction(null));
         controller.setCloseCmd(mainView::closeCurrentTab);
         controller.setNewCmd(this::showNewPhaseDialog);
@@ -519,6 +521,11 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         LOGGER.info("start");
 
         final Evaluation evaluation = GetariApp.get().getCurrentEval();
+        // setCurrent GetariApp.get().setCurrentEval(evaluation);
+        origin.setEvaluation(evaluation);
+        history.addMemento(origin.save());
+        LOGGER.trace("added a memento");
+        LOGGER.trace(history.getSize());
         final List<Indicator> phases = new ArrayList<>(
                 evaluation.getIndicators());
         evaluation.clearIndicators();
@@ -597,6 +604,7 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         phaseCombo.getItems().clear();
         GetariApp.get().getCurrentEval().clearIndicators();
         GetariApp.get().getCurrentEval().setTranscient(true);
+        
     }
 
     @Override

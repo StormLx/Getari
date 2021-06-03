@@ -30,6 +30,8 @@ import java.util.concurrent.Executors;
 import fr.inrae.agroclim.getari.component.BorderedTitledPane;
 import fr.inrae.agroclim.getari.component.EvaluationTextField;
 import fr.inrae.agroclim.getari.component.GetariApp;
+import fr.inrae.agroclim.getari.memento.History;
+import fr.inrae.agroclim.getari.memento.Origin;
 import fr.inrae.agroclim.getari.resources.Messages;
 import fr.inrae.agroclim.getari.util.AlertUtils;
 import fr.inrae.agroclim.getari.util.ComponentUtil;
@@ -88,6 +90,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -135,6 +138,10 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      */
     private Boolean hasClimateChanged = false;
 
+
+    
+    private final History history;
+
     /**
      * Constructor.
      *
@@ -157,6 +164,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         titledPane.prefWidthProperty().bind(
                 scrollPane.widthProperty());
         getGridPane().prefWidthProperty().bind(titledPane.widthProperty());
+        this.history = graphview.getHistory();
     }
 
     /**
@@ -460,6 +468,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      * @param e evaluation
      */
     private void build(final Evaluation e) {
+    	Origin origin = new Origin();
         LOGGER.trace("visit(Evaluation e)");
         titledPane.setTitle(null);
         getGridPane().getColumnConstraints().get(0).minWidthProperty()
@@ -545,6 +554,9 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
             e.setName(Locale.getDefault().getLanguage(),
                     evaluationField.getText());
             GetariApp.getMainView().getCurrentTab().setText("* " + e.getName());
+            origin.setEvaluation(e);
+            history.addMemento(origin.save());
+            LOGGER.trace("Size: {}", history.getSize());
             if (hasPhenoChanged || hasClimateChanged) {
                 e.initializeResources();
                 if (e.getResourceManager().getPhenologicalResource()
