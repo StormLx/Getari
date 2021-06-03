@@ -1,0 +1,140 @@
+#
+# https://gohugo.io/getting-started/configuration/
+baseurl = "https://w3.avignon.inrae.fr/getari/"
+title = "GETARI"
+theme = "getari"
+languageCode = "fr-fr"
+# Site language. Available translations in the theme's `/i18n` directory.
+defaultContentLanguage = "fr"
+# Enable Google Analytics by entering your tracking code
+googleAnalytics = "UA-129160559-1"
+
+[Author]
+    name = "INRAE US 1116 Agroclim"
+
+[params]
+    about_us = ""
+    copyright = ""
+    defaultKeywords = []
+    defaultDescription = "Generic Evaluation Tool for AgRoclimatic Indicators"
+    bingWebmasterVerification = "CD1EC86B6BFF2C52AAD928D69A418A25"
+    googleSiteVerification = "61d7y7yd836C3XZBb81vd-06AowujAsvFKjVLQ0eAc4"
+
+    # Style options: default (light-blue), blue, green, marsala, pink, red, turquoise, violet
+    style = "turquoise"
+
+    # Since this template is static, the contact form uses AJAX on a PHP page.
+    # Enable the contact form by entering the PHP page and recipient
+    contactService = "https://w3.avignon.inrae.fr/getari/contact.php"
+    contactRecipient = "getari"
+    email = "support-season@inrae.fr"
+
+
+    # Format dates with Go's time formatting
+    date_format = "January 2, 2006"
+
+    logo = "img/logo_getari_200.png"
+    logo_small = "img/logo_getari_small.png"
+    address = """Unité de service AGROCLIM<br/>
+INRAE, centre de recherche Provence-Alpes-Côte d’Azur<br/>
+228, route de l'Aérodrome<br/>
+CS 40 509<br/>
+Domaine Saint Paul, Site Agroparc<br/>
+84914 Avignon Cedex 9<br/>
+France"""
+    latitude = "43.916097"
+    longitude = "4.879898"
+
+[Permalinks]
+    blog = "/blog/:year/:month/:day/:filename/"
+
+[params.carousel]
+    enable = true
+    # All carousel items are defined in their own files. You can find example items
+    # at 'exampleSite/data/carousel'.
+    # For more informtion take a look at the README.
+
+[languages]
+    [languages.en]
+        about_us = """<p>GETARI is developed at <a href='https://www6.paca.inrae.fr/agroclim' target='_blank'>AgroClim</a>.<br/>
+                        <a href='https://www.inrae.fr/' target='_blank'><img src='/getari/img/clients/logo_inrae_small.png' alt='INRAE'/></a>
+                        <a href='https://www.cnrs.fr/' target='_blank'><img src='/getari/img/clients/logo_cnrs_small.png' alt='CNRS'/></a></p>"""
+        copyright = """Copyright © INRAE 2020<br/>
+                        <a href='/getari/legal/'>Term of service</a><br/>
+                        <a href='/getari/legal/#mentionslegales'>Legal mentions</a><br/>
+                        <a href='/getari/legal/#credits'>Credits</a>"""
+        [languages.en.menu]
+            [[languages.en.menu.main]]
+                name = "What is GETARI?"
+                url  = "/en/about/"
+                weight = 2
+
+            [[languages.en.menu.main]]
+                name = "How to use GETARI?"
+                identifier = "usage"
+                url  = "/en/usage/"
+                weight = 3
+
+            [[languages.en.menu.main]]
+                name = "Indicators"
+                url  = "/en/indicators/"
+                weight = 4
+
+            [[languages.en.menu.main]]
+                name = "Download"
+                url  = "/en/download/"
+                weight = 5
+
+            [[languages.en.menu.main]]
+                name = "Webinar"
+                url  = "/webinar"
+                weight = 6
+
+            [[languages.en.menu.main]]
+                name = "🇫🇷"
+                url  = "/fr/"
+                weight = 7
+
+    [languages.fr]
+        languageCode = "fr-fr"
+        about_us = """<p>GETARI est développé à <a href='https://www6.paca.inrae.fr/agroclim' target='_blank'>AgroClim</a>.<br/>
+                        <a href='https://www.inrae.fr/' target='_blank'><img src='/getari/img/clients/logo_inrae_small.png' alt='INRAE'/></a>
+                        <a href='https://www.cnrs.fr/' target='_blank'><img src='/getari/img/clients/logo_cnrs_small.png' alt='CNRS'/></a></p>"""
+        copyright = """Copyright © INRAE 2020<br/>
+                        <a href='/getari/legal/'>Conditions générales d'utilisation</a><br/>
+                        <a href='/getari/legal/#mentionslegales'>Mentions légales</a><br/>
+                        <a href='/getari/legal/#credits'>Crédits</a>"""
+        [languages.fr.menu]
+            [[languages.fr.menu.main]]
+                name = "Qu'est-ce que GETARI ?"
+                url  = "/about/"
+                weight = 2
+
+            [[languages.fr.menu.main]]
+                name = "Comment utiliser GETARI ?"
+                identifier = "usage"
+                url  = "/usage/"
+                weight = 3
+
+            [[languages.fr.menu.main]]
+                name = "Indicateurs"
+                url  = "/indicators/"
+                weight = 4
+
+            [[languages.fr.menu.main]]
+                name = "Télécharger"
+                url  = "/download/"
+                weight = 5
+
+            [[languages.fr.menu.main]]
+                name = "Webinaire"
+                url  = "/webinar"
+                weight = 6
+
+            [[languages.fr.menu.main]]
+                name = "🇬🇧"
+                url  = "/en/"
+                weight = 7
+
+[markup.goldmark.renderer]
+    unsafe= true

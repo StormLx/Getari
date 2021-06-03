@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://w3.avignon.inrae.fr/sitemap.xml

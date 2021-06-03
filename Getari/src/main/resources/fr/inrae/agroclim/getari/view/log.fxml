@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+<!-- $Id$ -->
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane fx:id="consoleTab" prefHeight="233.0" prefWidth="${consoleTab.parent.width}" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.inrae.agroclim.getari.controller.LogController">
+    <tabs>
+        <Tab fx:id="errorsTab" closable="false" text="%tab.errors">
+            <graphic>
+                <ImageView pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/alert-circle.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <VBox prefHeight="200.0">
+                    <children>
+                        <Label fx:id="errorsLabel" />
+                        <ListView fx:id="errorsList" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </content>
+        </Tab>
+        <Tab fx:id="warnTab" closable="false" text="%tab.warnings">
+            <graphic>
+                <ImageView pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/alert-triangle.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <VBox prefHeight="200.0">
+                    <children>
+                        <Label fx:id="warnLabel" />
+                        <ListView fx:id="warnList" prefHeight="200.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

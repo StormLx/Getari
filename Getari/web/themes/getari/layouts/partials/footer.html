@@ -1,0 +1,42 @@
+<footer id="footer">
+    <div class="container">
+
+        {{ if isset .Site.Params "copyright" }}
+        <div class="col-md-4 col-sm-6">
+            <p class="pull-left">{{ .Site.Params.copyright | safeHTML }}</p>
+        </div>
+        <!-- /.col-md-4 -->
+        {{ end }}
+        
+        {{ if isset .Site.Params "about_us" }}
+        <div class="col-md-4 col-sm-6">
+            <h4>{{ i18n "aboutUs" }}</h4>
+
+            {{ .Site.Params.about_us | markdownify }}
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        <!-- /.col-md-4 -->
+        {{ end }}
+
+        {{ if isset .Site.Params "address" }}
+        <div class="col-md-4 col-sm-6">
+
+            <h4><a href='{{ "contact" | relURL}}' title='{{ i18n "contactGoTo" }}'>{{ i18n "contactTitle" }}</a></h4>
+
+            {{ .Site.Params.address | markdownify }}
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        <!-- /.col-md-4 -->
+        {{ end }}
+
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- /#footer -->
+
+<!-- *** FOOTER END *** -->

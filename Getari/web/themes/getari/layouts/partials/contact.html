@@ -1,0 +1,94 @@
+<div class="container" id="contact">
+
+    <div class="row">
+        <div class="col-md-8">
+
+            <section>
+
+                {{ .Content }}
+                
+                {{ if isset .Site.Params "contactservice" }}
+
+                <div class="heading">
+                  <h3>{{ i18n "contactForm" }}</h3>
+                </div>
+
+                <div id="contact-message"></div>
+
+                <form class="contact-form" method="post" action="{{ .Site.Params.contactService }}">
+                    <input type="hidden" name="to" value="getari" />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="form_givenname">{{ i18n "contactGivenName" }} *</label>
+                                    <input id="form_givenname" name="from_givenname" type="text" class="form-control" required="required">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="form_familyname">{{ i18n "contactFamilyName" }} *</label>
+                                    <input id="form_familyname" name="from_familyname" type="text" class="form-control" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="form_email">{{ i18n "contactEmail" }} *</label>
+                                    <input id="form_email" name="from_email" type="email" class="form-control" required="required">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="form_subject">{{ i18n "contactSubject" }}</label>
+                                    <input id="form_subject" name="subject" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="form_message">{{ i18n "contactMessage" }} *</label>
+                                    <textarea id="form_message" name="message" class="form-control" required="required"></textarea>
+                                </div>
+                            </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p class="text-muted"><strong>*</strong> {{ i18n "contactRequired" }}.</p>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 text-center">
+                                  <button type="submit" class="btn btn-template-main"><i class="fa fa-envelope-o"></i>{{ i18n "contactSend" }}</button>
+                                </div>
+                            </div>
+                        </div>  
+                        <!-- /.row -->
+                </form>
+
+                {{ end }}
+
+            </section>
+
+        </div>
+
+        <div class="col-md-4">
+
+            {{ if isset .Site.Params "address" }}
+            <section>
+
+              <h3 class="text-uppercase"> {{ i18n "contactAddrTitle" }}</h3>
+
+                {{ .Site.Params.address | safeHTML }}
+
+            </section>
+
+            {{ end }}
+
+        </div>
+
+    </div>
+    <!-- /.row -->
+</div>
+
+{{ partial "map.html" . }}

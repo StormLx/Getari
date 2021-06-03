@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2021 INRAE AgroClim
+
+This file is part of Indicators.
+
+Indicators is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Indicators is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Indicators. If not, see <http://www.gnu.org/licenses/>.
+-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+               schemaLocation="https://www.w3.org/2009/01/xml.xsd" />
+    <xs:element name="evaluationSettings">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="climate" />
+                <xs:element name="phenology" />
+                <xs:element type="xs:string" name="name" />
+                <xs:element name="compositeIndicator" />
+            </xs:sequence>
+            <xs:attribute name="timescale" />
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="timescale">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DAILY"/>
+            <xs:enumeration value="HOURLY"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="localizedString">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="xml:lang" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="climate">
+        <xs:sequence>
+            <xs:element name="file">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="separator" />
+                        <xs:element type="xs:string" name="header" maxOccurs="unbounded" minOccurs="0" />
+                        <xs:element type="xs:integer" name="midnight" />
+                    </xs:sequence>
+                    <xs:attribute type="xs:string" name="path" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="phenology">
+        <xs:sequence>
+            <xs:element name="file">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="separator" />
+                        <xs:element type="xs:string" name="header" maxOccurs="unbounded" minOccurs="0" />
+                    </xs:sequence>
+                    <xs:attribute type="xs:string" name="path" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Indicator -->
+    <xs:complexType name="indicator">
+        <xs:sequence>
+            <xs:element type="localizedString" name="name" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element type="xs:string" name="id" />
+            <xs:element type="xs:string" name="category" minOccurs="0" maxOccurs="1" />
+            <xs:element type="xs:string" name="color" minOccurs="0" maxOccurs="1" />
+            <xs:element type="xs:string" name="tag" minOccurs="0" maxOccurs="1" />
+            <xs:element type="timescale" name="timescale" default="DAILY" minOccurs="0" maxOccurs="1" />
+            <xs:element name="normalizationFunction" type="xs:anyType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="compositeIndicator">
+        <xs:complexContent>
+            <xs:extension base="indicator">
+                <xs:sequence>
+                    <xs:element name="aggregationFunction" type="xs:anyType" minOccurs="0" />
+                    <xs:element name="indicator" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="diffOfSum">
+        <xs:complexContent>
+            <xs:extension base="indicator">
+                <xs:sequence>
+                    <xs:element type="sum" name="sumVariable1" />
+                    <xs:element type="sum" name="sumVariable2" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="numberOfWaves">
+        <xs:complexContent>
+            <xs:extension base="simpleIndicatorWithCriteria">
+                <xs:sequence>
+                    <xs:element type="xs:int" name="nbDays" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="simpleIndicatorWithCriteria" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="indicator">
+                <xs:sequence>
+                    <xs:element type="criteria" name="criteria" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="sum">
+        <xs:sequence>
+            <xs:element type="xs:string" name="category" minOccurs="0" maxOccurs="1" />
+            <xs:element type="criteria" name="criteria" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- AggregationFunction -->
+    <xs:complexType name="aggregationFunction" abstract="true">
+        <xs:attribute name="expression" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="jexlFunction">
+        <xs:complexContent>
+            <xs:extension base="aggregationFunction" />
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- NormalizationFunction -->
+    <xs:complexType name="normalizationFunction" abstract="true">
+        <xs:sequence>
+            <xs:element type="xs:string" name="name" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="exponential">
+        <xs:complexContent>
+            <xs:extension base="normalizationFunction">
+                <xs:attribute type="xs:float" name="expA" />
+                <xs:attribute type="xs:float" name="expB" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="linear">
+        <xs:complexContent>
+            <xs:extension base="normalizationFunction">
+                <xs:attribute type="xs:float" name="linearA" />
+                <xs:attribute type="xs:float" name="linearB" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="multiLinearInterval">
+        <xs:sequence>
+            <xs:element type="linear" name="linear" />
+            <xs:element type="xs:float" name="min" />
+            <xs:element type="xs:float" name="max" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="multiLinear">
+        <xs:complexContent>
+            <xs:extension base="normalizationFunction">
+                <xs:sequence>
+                    <xs:element type="multiLinearInterval" name="interval" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="sigmoid">
+        <xs:complexContent>
+            <xs:extension base="normalizationFunction">
+                <xs:attribute type="xs:float" name="sigmoidA" />
+                <xs:attribute type="xs:float" name="sigmoidB" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- Criteria -->
+    <xs:simpleType name="relationalOperator">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="EQ"/>
+            <xs:enumeration value="NE"/>
+            <xs:enumeration value="GT"/>
+            <xs:enumeration value="LT"/>
+            <xs:enumeration value="GE"/>
+            <xs:enumeration value="LE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="criteria">
+        <xs:sequence>
+            <xs:element type="xs:string" name="variable" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="simpleCriteria">
+        <xs:complexContent>
+            <xs:extension base="criteria">
+                <xs:choice>
+                    <xs:sequence>
+                        <xs:element type="relationalOperator" name="operator" />
+                        <xs:element type="xs:float" name="threshold" />
+                        <xs:element type="xs:string" name="noThreshold" />
+                    </xs:sequence>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="inferiorToThreshold" />
+                        <xs:element type="xs:string" name="strict" />
+                        <xs:element type="xs:float" name="threshold" />
+                        <xs:element type="xs:string" name="noThreshold" />
+                    </xs:sequence>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>
+

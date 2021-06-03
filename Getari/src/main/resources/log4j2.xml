@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE xml>
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+<!-- GETARI -->
+<!-- Last changed : $Date$ -->
+<!-- @author $Author$ -->
+<!-- @version $Revision$ -->
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="cli" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>%m%n</pattern>
+            </PatternLayout>
+        </Console>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>%d %-5p %-40.40c{1.}#%32M() %4L %m%n</pattern>
+            </PatternLayout>
+        </Console>
+        <!-- https://logging.apache.org/log4j/2.x/manual/appenders.html#RollingFileAppender -->
+        <RollingFile name="file" fileName="logs/getari.log"
+                     filePattern="logs/$${date:yyyy-MM}/getari-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %-5p %-40.40c{1.}#%32M() %4L %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="2 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="TRACE">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Root>
+        <Logger name="fr.inrae.agroclim.getari.Getari" level="INFO" additivity="false">
+            <AppenderRef ref="cli"/>
+        </Logger>
+    </Loggers>
+</Configuration>

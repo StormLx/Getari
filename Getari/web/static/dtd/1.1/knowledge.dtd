@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2021 INRAE AgroClim
+
+This file is part of Indicators.
+
+Indicators is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Indicators is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Indicators. If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Add the following to any file that is to be validated against this DTD:
+
+<!DOCTYPE knowledge PUBLIC
+	"-//INRAE AgroClim.//DTD Knowledge 1.1//EN"
+	"https://w3.avignon.inrae.fr/getari/dtd/1.1/knowledge.dtd">
+-->
+<!ELEMENT knowledge (culturalPractices, ecophysiologicalProcesses, parameters, climaticEffects)>
+
+<!ENTITY % elements PUBLIC
+	"-//INRAE AgroClim.//DTD Evaluation 1.1//EN"
+	"https://w3.avignon.inrae.fr/getari/dtd/1.1/evaluation.dtd" >
+%elements;
+
+<!ELEMENT culturalPractices (culturalPractice+)>
+<!ELEMENT culturalPractice (name*, id)>
+<!ATTLIST culturalPractice
+	xmlns:xsi CDATA #IMPLIED
+	xsi:type CDATA #IMPLIED>
+
+<!ELEMENT ecophysiologicalProcesses (ecophysiologicalProcess+)>
+<!ELEMENT ecophysiologicalProcess (name*, id)>
+<!ATTLIST ecophysiologicalProcess
+	xmlns:xsi CDATA #IMPLIED
+	xsi:type CDATA #IMPLIED>
+
+<!ELEMENT climaticEffects (climaticEffect+)>
+<!ELEMENT climaticEffect (name*, id, indicator*)>
+<!ATTLIST climaticEffect
+	xmlns:xsi CDATA #IMPLIED
+	xsi:type CDATA #IMPLIED>

@@ -1,0 +1,13 @@
+/target/
+.checkstyle
+.classpath
+*.gri
+log
+logs
+nbactions-%%DEFAULT%%_clone.xml
+output
+output*csv
+output*txt
+.project
+.settings
+bin/tokei

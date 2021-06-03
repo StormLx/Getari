@@ -1,0 +1,78 @@
+/* your styles go here */
+#all {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.box-image-text .image {
+  min-height: 200px;
+  max-height: 200px;
+}
+
+.box-simple {
+  min-height: 230px;
+}
+
+#content {
+    flex: 1;
+}
+
+#toc {
+    border-left: 1px solid #ccc;
+    padding: 1em;
+    position: fixed;
+    right: 20px;
+    top: 200px;
+}
+#toc p {
+    font-weight: 700;
+}
+#TableOfContents {
+    max-width: 20em;
+}
+#TableOfContents ul {
+    list-style-type: none;
+}
+
+.container img {
+    max-width: 100%;
+}
+
+.map {
+    background-color: #E5E3DF;
+}
+
+article {
+    margin-bottom: 1em;
+}
+table {
+    margin-bottom: 1em;
+    width: 100%;
+}
+td, th {
+    padding: 0.5rem;
+    border: 1px solid #eaeaea;
+}
+th,
+tr:nth-child(2n) {
+    background-color: #eaeaea;
+}
+tr, td, th {
+    vertical-align: middle;
+    line-height: 1.6;
+}
+tr.lineheader strong::before {
+    content: "\25BC";
+    padding-right: 0.5em;
+}
+tr.lineheader {
+    cursor: pointer;
+}
+tr.lineheader.collapsed strong::before {
+    content: "\25B8";
+    padding-right: 0.5em;
+}
+tr.lineheader.collapsed {
+    background-color: transparent;
+}

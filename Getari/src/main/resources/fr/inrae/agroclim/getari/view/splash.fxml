@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:id="splashLayout" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400" prefWidth="500" style="-fx-padding: 20; -fx-background-color: #eeeeee; -fx-border-width: 1; -fx-border-color: black;" stylesheets="@../progress.css" xmlns="http://javafx.com/javafx/8.0.20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.inrae.agroclim.getari.controller.SplashController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Label fx:id="progressText" alignment="CENTER" prefHeight="20" prefWidth="500" text="-" GridPane.rowIndex="2" />
+        <ImageView pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../images/logo_getari_middle.png" />
+            </image>
+        </ImageView>
+        <ProgressBar fx:id="progressBar" prefHeight="20.0" prefWidth="470.0" progress="0.0" styleClass="black-bar" GridPane.rowIndex="1" />
+    </children>
+    <effect>
+        <DropShadow />
+    </effect>
+</GridPane>

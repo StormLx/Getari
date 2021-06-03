@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+
+<MenuBar fx:id="menuBar" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.inrae.agroclim.getari.controller.MenuController">
+    <menus>
+        <!-- Evaluation -->
+        <Menu text="%action.evaluation">
+            <items>
+                <!-- Evaluation / New -->
+                <MenuItem text="%action.new" accelerator="Shortcut+N" onAction="#onNewEvaluation">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/new-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- Evaluation / Open -->
+                <MenuItem text="%action.open" accelerator="Shortcut+O" onAction="#onOpenEvaluation">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/open-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- Evaluation / Recently added -->
+                <Menu fx:id="recentlyOpenedMenu" text="%action.open.recent">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/open-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Menu>
+                <!-- Evaluation / Save -->
+                <MenuItem fx:id="saveEvaluation" text="%action.save" disable="true" accelerator="Shortcut+S" onAction="#onSaveEvaluation">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/save-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- Evaluation / Save as -->
+                <MenuItem fx:id="saveasEvaluation" text="%action.saveas" disable="true" onAction="#onSaveasEvaluation">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/save-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <SeparatorMenuItem />
+                <!-- Evaluation / Run -->
+                <MenuItem fx:id="runEvaluation" text="%action.evaluate" disable="true" accelerator="Shortcut+E" onAction="#onRunEvaluation">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/run-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- Evaluation / Close -->
+                <MenuItem text="%action.close" accelerator="Shortcut+W" onAction="#onCloseEvaluation">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/exit-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- Evaluation / Exit -->
+                <MenuItem text="%action.exit" accelerator="Shortcut+Q" onAction="#onExit">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/exit-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+            </items>
+        </Menu>
+        <!-- Results -->
+        <Menu text="%action.result">
+            <items>
+                <!-- Results / Open -->
+                <MenuItem text="%action.open" onAction="#onOpenResults">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/open-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- Results / Save as -->
+                <MenuItem fx:id="saveasResults" text="%action.saveas" onAction="#onSaveasResults">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/save-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+            </items>
+        </Menu>
+        <!-- MultiExecution -->
+        <Menu text="%action.multiexecution">
+            <items>
+                <!-- MultiExecution / New -->
+                <MenuItem text="%action.new.multiexecution" onAction="#onNewME">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/new-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- MultiExecution / Open -->
+                <MenuItem text="%action.open" onAction="#onOpenME">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/open-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+                <!-- MultiExecution / Recently added -->
+                <Menu fx:id="recentlyOpenME" text="%action.open.recent.multipleexecution">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="@../images/open-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Menu>
+            </items>
+        </Menu>
+        <!-- Help -->
+        <Menu text="%action.help">
+            <items>
+                <!-- Help / Support -->
+                <MenuItem text="%action.support" onAction="#onSupport" />
+                <!-- Help / Release notes -->
+                <MenuItem text="%releasenotes.view.title" onAction="#onReleaseNotes" />
+                <!-- Help / About -->
+                <MenuItem text="%action.about" onAction="#onAbout" />
+                <!-- Help / Change language -->
+                <Menu fx:id="languages" text="%action.languages" />
+            </items>
+        </Menu>
+    </menus>
+</MenuBar>

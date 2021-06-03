@@ -1,0 +1,684 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.inrae.agroclim</groupId>
+    <artifactId>Getari</artifactId>
+    <name>Getari</name>
+    <description>Generic Evaluation Tool of AgRoclimatic Indicators</description>
+    <version>1.1.2-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <licenses>
+        <license>
+            <name>GNU General Public License</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+        </license>
+    </licenses>
+    <organization>
+        <name>INRAE AgroClim</name>
+        <url>https://www6.paca.inrae.fr/agroclim</url>
+    </organization>
+    <url>https://www6.paca.inrae.fr/agroclim</url>
+    <scm>
+        <url>https://git.renater.fr/anonscm/git/getari/getari.git</url>
+        <connection>scm:git:https://git.renater.fr/anonscm/git/getari/getari.git</connection>
+    </scm>
+    <issueManagement>
+        <system>Redmine</system>
+        <url>https://w3.avignon.inrae.fr/forge/projects/getari/issues</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://147.100.20.95:8080/job/Getari/</url>
+    </ciManagement>
+    <!-- Deployment to Archiva -->
+    <!-- `mvn deploy` -->
+    <distributionManagement>
+        <repository>
+            <id>archiva.central</id>
+            <name>Internal Release Repository</name>
+            <url>http://147.100.20.3:9090/archiva/repository/internal/</url>
+        </repository>
+        <snapshotRepository>
+            <id>archiva.central</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://147.100.20.3:9090/archiva/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <properties>
+        <build.date>${maven.build.timestamp}</build.date>
+        <assertj.version>3.13.2</assertj.version>
+        <checkstyle.config.location>file://${basedir}/config/sun_checks.xml</checkstyle.config.location>
+        <checkstyle.includeResources>false</checkstyle.includeResources>
+        <checkstyle.includeTestResources>false</checkstyle.includeTestResources>
+        <client.plugin.version>0.1.36</client.plugin.version>
+        <indicators.version>1.1.2-SNAPSHOT</indicators.version>
+        <jacoco.version>0.8.6</jacoco.version>
+        <javafx.maven.plugin.version>0.0.5</javafx.maven.plugin.version>
+        <javafx.version>15.0.1</javafx.version>
+        <junit.version>4.13.1</junit.version>
+        <log4j.version>2.14.0</log4j.version>
+        <lombok.version>1.18.12</lombok.version>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mainClass>fr.inrae.agroclim.getari.Getari</mainClass>
+        <monocle.version>jdk-12.0.1+2</monocle.version>
+        <sloccount.path>bin/sloccount.sh</sloccount.path>
+        <testfx.version>4.0.16-alpha</testfx.version>
+        <testfx-junit.version>4.0.15-alpha</testfx-junit.version>
+    </properties>
+    <profiles>
+        <profile>
+            <id>desktop</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <client.target>host</client.target>
+            </properties>
+        </profile>
+        <profile>
+            <id>Linux</id>
+            <activation>
+                <os>
+                    <family>Linux</family>
+                </os>
+            </activation>
+            <properties>
+                <jpackage.script.path>bin\jpackage.sh</jpackage.script.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>Mac</id>
+            <activation>
+                <os>
+                    <family>Mac</family>
+                </os>
+            </activation>
+            <properties>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <checkstyle.config.location>${basedir}\config\sun_checks.xml</checkstyle.config.location>
+                <jpackage.script.path>bin\jpackage.bat</jpackage.script.path>
+                <sloccount.path>bin\sloccount.bat</sloccount.path>
+            </properties>
+        </profile>
+    </profiles>
+    <dependencies>
+        <dependency>
+            <groupId>fr.inrae.agroclim</groupId>
+            <artifactId>Indicators</artifactId>
+            <version>${indicators.version}</version>
+            <classifier>jdk11</classifier>
+        </dependency>
+        <!-- Redmine -->
+        <!-- https://mvnrepository.com/artifact/com.taskadapter/redmine-java-api -->
+        <!-- https://github.com/taskadapter/redmine-java-api -->
+        <dependency>
+            <groupId>com.taskadapter</groupId>
+            <artifactId>redmine-java-api</artifactId>
+            <version>4.0.0.rc4</version>
+        </dependency>
+        <!-- JAXB -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <!-- Markdown to HTML -->
+        <!-- https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark -->
+        <!-- https://github.com/vsch/flexmark-java -->
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark</artifactId>
+            <version>0.62.2</version>
+        </dependency>
+        <!-- Lombok annotations -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+        <!-- Semantic Versioning : https://github.com/vdurmont/semver4j -->
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>semver4j</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!-- JavaFX is no longer part of the JDK >= 11 -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <!-- Tests -->
+        <!-- https://github.com/TestFX/TestFX -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <version>${testfx-junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>${monocle.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!-- Store build date, version and revision. -->
+            <resource>
+                <directory>src/main/filtered</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <defaultGoal>clean package</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>11</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Xlint:all,-options,-path</arg>
+                    </compilerArgs>
+                    <release>11</release>
+                    <source>11</source>
+                    <target>11</target>
+                    <testSource>11</testSource>
+                    <testTarget>11</testTarget>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-executable</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${test.pack.dir}</outputDirectory>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                        <!-- log4j-2.14.0 shows -->
+                        <!-- WARNING: sun.reflect.Reflection.getCallerClass is not supported. -->
+                        <manifestEntries>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Native client -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.gluonhq</groupId>
+                <artifactId>client-maven-plugin</artifactId>
+                 <version>${client.plugin.version}</version>
+                <configuration>
+                    <target>${client.target}</target>
+                    <mainClass>${mainClass}</mainClass>
+                    <nativeImageArgs>
+                        <!-- no-fallback to suppress fallback image generation and to print more detailed information why a fallback image was necessary -->
+                        <list>--no-fallback</list>
+                        <!-- allow-incomplete-classpath avoid errors such as UnresolvedElementException -->
+                        <list>--allow-incomplete-classpath</list>
+                    </nativeImageArgs>
+                    <verbose>true</verbose>
+                    <bundlesList>
+                        <list>fr.inrae.agroclim.getari.view.start</list>
+                    </bundlesList>
+                    <reflectionList>
+                        <list>fr.inrae.agroclim.getari.event.ConsistencyEvent</list>
+                        <list>fr.inrae.agroclim.getari.event.EventBus</list>
+                        <list>fr.inrae.agroclim.getari.event.Subscriber</list>
+                        <list>fr.inrae.agroclim.getari.event.EvaluationSaveEvent</list>
+                        <list>fr.inrae.agroclim.getari.event.RecentUpdateEvent</list>
+                        <list>fr.inrae.agroclim.getari.GetariCli</list>
+                        <list>fr.inrae.agroclim.getari.view.FxmlView</list>
+                        <list>fr.inrae.agroclim.getari.view.LogView</list>
+                        <list>fr.inrae.agroclim.getari.view.ToolbarView</list>
+                        <list>fr.inrae.agroclim.getari.view.FunctionChartView</list>
+                        <list>fr.inrae.agroclim.getari.view.SelectDataView</list>
+                        <list>fr.inrae.agroclim.getari.view.graph.GraphElement</list>
+                        <list>fr.inrae.agroclim.getari.view.graph.GraphRoot</list>
+                        <list>fr.inrae.agroclim.getari.view.graph.GraphNode</list>
+                        <list>fr.inrae.agroclim.getari.view.CsvView</list>
+                        <list>fr.inrae.agroclim.getari.view.View</list>
+                        <list>fr.inrae.agroclim.getari.view.MainView</list>
+                        <list>fr.inrae.agroclim.getari.view.MenuBar</list>
+                        <list>fr.inrae.agroclim.getari.view.visitor.GraphVisitor</list>
+                        <list>fr.inrae.agroclim.getari.view.visitor.DetailedViewVisitor</list>
+                        <list>fr.inrae.agroclim.getari.view.visitor.Cpt</list>
+                        <list>fr.inrae.agroclim.getari.view.visitor.DetailedCriteriaViewVisitor</list>
+                        <list>fr.inrae.agroclim.getari.view.visitor.DetailedIndicatorViewVisitor</list>
+                        <list>fr.inrae.agroclim.getari.view.visitor.DetailedFunctionViewVisitor</list>
+                        <list>fr.inrae.agroclim.getari.view.StartView</list>
+                        <list>fr.inrae.agroclim.getari.view.SplashView</list>
+                        <list>fr.inrae.agroclim.getari.view.GraphView</list>
+                        <list>fr.inrae.agroclim.getari.view.ResultsView</list>
+                        <list>fr.inrae.agroclim.getari.view.Separator</list>
+                        <list>fr.inrae.agroclim.getari.view.CreatePhaseView</list>
+                        <list>fr.inrae.agroclim.getari.exception.GetariException</list>
+                        <list>fr.inrae.agroclim.getari.util.OneEmptyBinding</list>
+                        <list>fr.inrae.agroclim.getari.util.MenuUtils</list>
+                        <list>fr.inrae.agroclim.getari.util.NameableListCell</list>
+                        <list>fr.inrae.agroclim.getari.util.PlatformUtil</list>
+                        <list>fr.inrae.agroclim.getari.util.GetariConstants</list>
+                        <list>fr.inrae.agroclim.getari.util.ComponentUtil</list>
+                        <list>fr.inrae.agroclim.getari.util.DrawingTool</list>
+                        <list>fr.inrae.agroclim.getari.util.AlertUtils</list>
+                        <list>fr.inrae.agroclim.getari.util.CsvWriter</list>
+                        <list>fr.inrae.agroclim.getari.util.StringUtils</list>
+                        <list>fr.inrae.agroclim.getari.util.NameablePhaseCell</list>
+                        <list>fr.inrae.agroclim.getari.controller.MouseDeleteController</list>
+                        <list>fr.inrae.agroclim.getari.controller.CsvController</list>
+                        <list>fr.inrae.agroclim.getari.controller.ToolbarController</list>
+                        <list>fr.inrae.agroclim.getari.controller.CreateEvaluationController</list>
+                        <list>fr.inrae.agroclim.getari.controller.DuplicatePhaseHandler</list>
+                        <list>fr.inrae.agroclim.getari.controller.MarkdownDisplayController</list>
+                        <list>fr.inrae.agroclim.getari.controller.AddIndicatorHandler</list>
+                        <list>fr.inrae.agroclim.getari.controller.SplashController</list>
+                        <list>fr.inrae.agroclim.getari.controller.CreatePhaseController</list>
+                        <list>fr.inrae.agroclim.getari.controller.LogController</list>
+                        <list>fr.inrae.agroclim.getari.controller.FunctionChartController</list>
+                        <list>fr.inrae.agroclim.getari.controller.AboutController</list>
+                        <list>fr.inrae.agroclim.getari.controller.StartController</list>
+                        <list>fr.inrae.agroclim.getari.controller.IndicatorDetailsHandler</list>
+                        <list>fr.inrae.agroclim.getari.controller.MouseAddMenuController</list>
+                        <list>fr.inrae.agroclim.getari.controller.SupportController</list>
+                        <list>fr.inrae.agroclim.getari.controller.SelectDataController</list>
+                        <list>fr.inrae.agroclim.getari.controller.NodeRightClickHandler</list>
+                        <list>fr.inrae.agroclim.getari.controller.AbstractController</list>
+                        <list>fr.inrae.agroclim.getari.controller.ResultsController</list>
+                        <list>fr.inrae.agroclim.getari.controller.MainViewController</list>
+                        <list>fr.inrae.agroclim.getari.resources.Version</list>
+                        <list>fr.inrae.agroclim.getari.resources.Messages</list>
+                        <list>fr.inrae.agroclim.getari.GetariFx</list>
+                        <list>fr.inrae.agroclim.getari.Getari</list>
+                        <list>fr.inrae.agroclim.getari.component.ActionLog</list>
+                        <list>fr.inrae.agroclim.getari.component.WindowResizeButton</list>
+                        <list>fr.inrae.agroclim.getari.component.WindowButtons</list>
+                        <list>fr.inrae.agroclim.getari.component.UpdateChecker</list>
+                        <list>fr.inrae.agroclim.getari.component.BorderedTitledPane</list>
+                        <list>fr.inrae.agroclim.getari.component.TitleBar</list>
+                        <list>fr.inrae.agroclim.getari.component.GetariApp</list>
+                        <list>fr.inrae.agroclim.getari.component.EvaluationTextField</list>
+                        <list>fr.inrae.agroclim.getari.component.GetariPreferences</list>
+                    </reflectionList>
+                </configuration>
+            </plugin>
+
+            <!-- Test and config for TestFX/Monocle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <threadCount>1</threadCount>
+                    <systemPropertyVariables>
+                        <testfx.robot>glass</testfx.robot>
+                        <glass.platform>Monocle</glass.platform>
+                        <monocle.platform>Headless</monocle.platform>
+                        <prism.order>sw</prism.order>
+                    </systemPropertyVariables>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${java.home}/lib/ext/jfxrt.jar</additionalClasspathElement>
+                    </additionalClasspathElements>
+                </configuration>
+            </plugin>
+
+            <!-- Compute buildNumber -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <format>{0}</format>
+                    <items>
+                        <item>scmVersion</item>
+                    </items>
+                    <providerImplementations>
+                        <svn>javasvn</svn>
+                    </providerImplementations>
+                </configuration>
+            </plugin>
+            <!-- Count lines of code. -->
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${sloccount.path}</executable>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-package</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${jpackage.script.path}</executable>
+                            <arguments>
+                                <argument>${java.home}</argument>
+                                <argument>${project.version}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Report on code coverage -->
+            <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/**/*.class</exclude>
+                        <exclude>Class50/lombok/**/*.lombok</exclude>
+                        <exclude>fr/inrae/agroclim/indicators/**/*.class</exclude>
+                        <exclude>lombok/**/*.class</exclude>
+                        <exclude>org/**/*.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <!-- Generate coverage report html in target/site/jacoco/ from target/jacoco.exec -->
+                        <id>report</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Fix checkstyle version to ensure sun_checks.xml matches. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <excludes>**/module-info.java</excludes>
+                </configuration>
+            </plugin>
+            <!-- PMD and CPD reports -->
+            <!-- mvn pmd:pmd -->
+            <!-- mvn pmd:cpd -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>target/generated-sources/*.java</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <excludeFromFailureFile>config/pmd-suppressions.properties</excludeFromFailureFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cpd</id>
+                        <goals>
+                            <goal>cpd-check</goal>
+                        </goals>
+                        <configuration>
+                            <excludeFromFailureFile>config/cpd-suppressions.properties</excludeFromFailureFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- mvn pdf:pdf -DincludeReports=false -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pdf-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <locales>en,fr</locales>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <!-- Those plugins are used by `mvn site` -->
+        <plugins>
+            <!-- Report on unit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M4</version>
+            </plugin>
+
+            <!-- Formatted metrics report -->
+            <!-- mvn jdepend:generate -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+
+            <!-- Generates a report regarding the code style used by the developers. -->
+            <!-- http://maven.apache.org/plugins/maven-checkstyle-plugin/ -->
+            <!-- mvn checkstyle:checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <includeResources>false</includeResources>
+                    <includeTestResources>false</includeTestResources>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                </configuration>
+            </plugin>
+
+            <!-- Generates a cross-reference of the project's sources. -->
+            <!-- http://maven.apache.org/jxr/maven-jxr-plugin/ -->
+            <!-- mvn jxr:jxr -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+
+            <!-- Generates API JavaDoc. -->
+            <!-- mvn javadoc:javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <links>
+                        <link>http://docs.oracle.com/javase/8/docs/api</link>
+                    </links>
+                    <!-- DocLint is a new feature in Java 8, which is summarized as: -->
+                    <!-- Provide a means to detect errors in Javadoc comments early in the development cycle and in a way that is easily linked back to the source code. This is enabled by default, and will run a whole lot of checks before generating Javadocs. You need to turn this off for Java 8 -->
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <doclint>none</doclint>
+                </configuration>
+            </plugin>
+
+            <!-- Include JaCoCo report into site -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- select non-aggregate reports -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

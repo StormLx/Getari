@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+<!-- $Id$ -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="200" prefWidth="600.0" styleClass="application" xmlns="http://javafx.com/javafx/8.0.20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.inrae.agroclim.getari.controller.AboutController">
+    <center>
+        <VBox prefHeight="200.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <children>
+                <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0">
+                    <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/logo_getari_small.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </FlowPane>
+                <Label fx:id="version" alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="586.0" styleClass="about-application-name" text="Getari-0.0.1" textAlignment="CENTER" />
+                <Label minHeight="40.0" prefHeight="50.0" prefWidth="589.0" text="%description" textAlignment="LEFT" wrapText="true" />
+                <Label fx:id="doi" minHeight="15.0" onMouseClicked="#onDoiClick" prefHeight="50.0" prefWidth="589.0" styleClass="about-doi" text="https://doi.org/10.15454/IZUFAP" textAlignment="LEFT" wrapText="true" />
+                <Label minHeight="40.0" prefHeight="50.0" prefWidth="589.0" text="%authors" textAlignment="LEFT" wrapText="true" />
+                <TextArea fx:id="sysinfo" editable="false" minHeight="-Infinity" prefHeight="120.0" prefWidth="200.0" text="sysinfo" wrapText="true" />
+                <FlowPane alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
+                    <children>
+                        <Button onAction="#onLicenseAction" text="%license">
+                            <FlowPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button onAction="#onWebsiteAction" text="%website">
+                            <FlowPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button fx:id="close" cancelButton="true" defaultButton="true" onAction="#onCloseAction" text="%close">
+                            <FlowPane.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </padding>
+                </FlowPane>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </VBox>
+    </center>
+</BorderPane>

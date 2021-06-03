@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) 2021 INRAE AgroClim
+
+This file is part of Indicators.
+
+Indicators is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Indicators is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Indicators. If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Add the following to any file that is to be validated against this DTD:
+
+<!DOCTYPE evaluationSettings PUBLIC
+	"-//INRAE AgroClim.//DTD Evaluation 1.1//EN"
+	"https://w3.avignon.inrae.fr/getari/dtd/1.1/evaluation.dtd">
+-->
+<!ELEMENT evaluationSettings (climate, phenology, name, compositeIndicator)>
+<!ATTLIST evaluationSettings timescale (DAILY|HOURLY) "DAILY">
+<!ELEMENT name (#PCDATA)>
+<!ATTLIST name xml:lang NMTOKEN #IMPLIED>
+
+<!ELEMENT climate (file)>
+<!ELEMENT phenology (file)>
+<!ELEMENT file (separator, header+, midnight*)>
+<!ATTLIST file path CDATA #REQUIRED>
+<!ELEMENT separator (#PCDATA)>
+<!ELEMENT header (#PCDATA)>
+<!ELEMENT midnight (#PCDATA)>
+
+<!ELEMENT compositeIndicator (name, id, tag, aggregationFunction, indicator+)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT aggregationFunction EMPTY>
+<!ELEMENT tag (#PCDATA)>
+<!ATTLIST aggregationFunction
+	expression CDATA #IMPLIED
+	xmlns:xsi CDATA #IMPLIED
+	xsi:type CDATA #REQUIRED>
+
+<!ELEMENT indicator (description*, name*, id, category?, color?, tag?, timescale?, aggregationFunction?, indicator*, normalizationFunction?, criteria?, sumVariable1?, sumVariable2?, variable?, nbDays?)>
+<!ATTLIST indicator
+	xmlns:xsi CDATA #IMPLIED
+	xsi:type CDATA #IMPLIED>
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT color (#PCDATA)>
+<!ELEMENT timescale (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ATTLIST description xml:lang NMTOKEN #IMPLIED>
+<!ELEMENT sumVariable1 (category, criteria)>
+<!ELEMENT sumVariable2 (category, criteria)>
+<!ELEMENT variable (#PCDATA)>
+<!ELEMENT nbDays (#PCDATA)>
+
+<!ELEMENT normalizationFunction (name?, interval*)>
+<!ATTLIST normalizationFunction
+	expA CDATA #IMPLIED
+	expB CDATA #IMPLIED
+	sigmoidA CDATA #IMPLIED
+	sigmoidB CDATA #IMPLIED
+	xmlns:xsi CDATA #IMPLIED
+	xsi:type CDATA #IMPLIED>
+<!ELEMENT interval (linear, max?, min?)>
+<!ELEMENT linear EMPTY>
+<!ATTLIST linear
+    	linearA CDATA #IMPLIED
+	linearB CDATA #IMPLIED>
+<!ELEMENT max (#PCDATA)>
+<!ELEMENT min (#PCDATA)>
+
+<!ELEMENT criteria (parameters?, variable, operator?, inferiorToThreshold?, strict?, threshold?, noThreshold?)>
+<!ATTLIST criteria xsi:type CDATA #IMPLIED>
+<!ELEMENT inferiorToThreshold (#PCDATA)>
+<!ELEMENT strict (#PCDATA)>
+<!ELEMENT threshold (#PCDATA)>
+<!ELEMENT noThreshold (#PCDATA)>
+<!ELEMENT operator (#PCDATA)>
+<!ELEMENT parameters (parameter*)>
+<!ELEMENT parameter (attribute, id)>
+<!ELEMENT attribute (#PCDATA)>

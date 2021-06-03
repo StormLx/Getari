@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!-- $Id: csv.fxml 699 2019-09-27 09:40:47Z omaury $ -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 68 68"
+   enable-background="new 0 0 70 70"
+   xml:space="preserve"
+   id="svg2"
+   inkscape:version="0.48.5 r10040"
+   width="100%"
+   height="100%"
+   sodipodi:docname="exit-icon.svg"
+   inkscape:export-filename="exit-icon@2x.png"
+   inkscape:export-xdpi="84.709999"
+   inkscape:export-ydpi="84.709999"><metadata
+     id="metadata22"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title><dc:source /><dc:rights><cc:Agent><dc:title /></cc:Agent></dc:rights><dc:creator><cc:Agent><dc:title /></cc:Agent></dc:creator><dc:description /></cc:Work></rdf:RDF></metadata><defs
+     id="defs20"><linearGradient
+       id="linearGradient5262"
+       osb:paint="solid"><stop
+         style="stop-color:#69bae8;stop-opacity:1;"
+         offset="0"
+         id="stop5264" /></linearGradient><linearGradient
+       id="linearGradient3820"><stop
+         style="stop-color:#69bae8;stop-opacity:1;"
+         offset="0"
+         id="stop3822" /><stop
+         style="stop-color:#69bae8;stop-opacity:0;"
+         offset="1"
+         id="stop3824" /></linearGradient><foreignObject
+       id="foreignObject6"
+       height="1"
+       width="1"
+       y="0"
+       x="0"
+       requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" /></defs><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1855"
+     inkscape:window-height="1176"
+     id="namedview18"
+     showgrid="false"
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2"
+     inkscape:zoom="5.6568542"
+     inkscape:cx="-28.528426"
+     inkscape:cy="32.517933"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" /><path
+     style="fill:#b669aa;fill-opacity:1;stroke:none"
+     d="M 29.375885,65.846352 C 21.85472,64.468454 16.832312,61.829156 11.415046,56.407842 6.6922726,51.681541 4.3252115,47.560133 2.7884591,41.387657 1.6025445,36.624348 1.8275728,28.932444 3.277902,24.65755 7.7947506,11.343989 18.78107,2.7640286 32.254483,2.0277762 47.210734,1.2104943 60.610799,10.771486 64.85297,25.286911 c 1.469781,5.029154 1.566967,11.596156 0.24625,16.639471 -1.659327,6.336322 -5.717526,12.655421 -10.867236,16.921578 -2.729812,2.261448 -9.025448,5.442627 -12.557059,6.345065 -3.157281,0.806785 -9.594804,1.148748 -12.29904,0.653327 l 0,0 z"
+     id="path3050"
+     inkscape:connector-curvature="0" /><g
+     id="g3021"><path
+       style="fill:#ffffff"
+       sodipodi:nodetypes="sssccccssccccs"
+       inkscape:connector-curvature="0"
+       id="path10"
+       d="m 38.823982,24.691702 c -0.350079,0.350078 -0.525118,0.787676 -0.525118,1.225274 0,0.437598 -0.0083,0.730259 0,1.225275 l 0,3.413265 -10.589874,0 c -3.500785,0.175039 -3.649287,6.669761 0,7.00157 l 10.589874,0 0,3.433546 c 0,0.990172 -0.08752,1.817631 0.612637,2.430268 0.700157,0.612638 1.750393,0.700157 2.450549,0 l 8.139325,-8.226844 c 0.700157,-0.700157 0.700157,-1.837912 0,-2.450549 L 41.36205,24.516662 c -0.700156,-0.525117 -1.837912,-0.525117 -2.538068,0.17504 z" /><path
+       sodipodi:nodetypes="ccccsccsccccsccsc"
+       inkscape:connector-curvature="0"
+       id="path12"
+       d="m 32.822779,19.149713 c 0.0041,-0.874409 -0.363421,-1.747242 -1.148695,-1.750393 -3.354802,6.67e-4 -6.794376,1.53e-4 -10.146806,0 -1.346797,0 0.468438,0 -1.750392,0 -0.962716,0 -1.750393,0.787677 -1.750393,1.750393 l 0,5.251177 0,19.254316 0,5.251177 c 0,0.962716 0.787677,1.750393 1.750393,1.750393 2.453674,0 0.560453,0 1.750392,0 3.35243,-1.53e-4 6.792004,-6.67e-4 10.146806,0 0.785274,-0.0032 1.152809,-0.875984 1.148695,-1.750393 -0.0041,-0.874408 -0.379747,-1.750392 -1.148695,-1.750392 l -10.146806,0 0,-26.255886 10.146806,0 c 0.768948,0 1.144613,-0.875984 1.148695,-1.750392 z"
+       style="fill:#ffffff" /></g></svg>

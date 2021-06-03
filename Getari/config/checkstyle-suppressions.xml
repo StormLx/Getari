@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+		"-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+		"https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <suppress checks="InnerAssignment|MagicNumber" files="ComponentUtil.java" />
+    <suppress checks="MagicNumber" files="DetailedFunctionViewVisitor.java" />
+    <suppress checks="MagicNumber" files="DetailedIndicatorViewVisitor.java" />
+    <suppress checks="MagicNumber" files="DrawingTool.java" />
+    <suppress checks="DesignForExtension" files="EvaluationTextField.java" />
+    <suppress checks="MagicNumber" files="GraphNode.java" />
+    <suppress checks="MagicNumber" files="GraphRoot.java" />
+    <suppress checks="MagicNumber" files="GraphView.java" />
+    <suppress checks=".*" files="[/\\]generated-sources[/\\]" />
+    <suppress checks="JavadocPackage|MagicNumber" files="[/\\]src[/\\]test[/\\]" />
+</suppressions>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE multiExecution PUBLIC
+    "-//INRAE AgroClim.//DTD MultiExecution 1.1//EN"
+    "https://w3.avignon.inrae.fr/getari/dtd/1.1/multiexecution.dtd">
+<multiexecution version="1.1.1-SNAPSHOT" timestamp="2021-03-31T13:56:49.408458" xsi:noNamespaceSchemaLocation="https://w3.avignon.inrae.fr/getari/xsd/1.1/multiexecution.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <evaluation>evaluation_daily_sample.gri</evaluation>
+    <execution climate="climate_daily_sample.txt" output="output.csv" phenology="pheno_sample.csv"/>
+    <execution climate="climate_daily_sample_2017_2018.txt" output="output2.csv" phenology="pheno_sample_2017_2018.csv"/>
+</multiexecution>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<!-- Last changed : $Date$ -->
+<!-- @author $Author$ -->
+<!-- @version $Revision$ -->
+<project name="${project.name}">
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.3.0</version>
+    </skin>
+
+    <custom>
+        <fluidoSkin>
+            <sideBarEnabled>true</sideBarEnabled>
+            <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+        </fluidoSkin>
+    </custom>
+
+    <bannerLeft>
+        <name>Documentation sur ${project.name}</name>
+    </bannerLeft>
+
+    <version position="bottom" />
+
+    <body>
+        <menu name="Documentation" inherit="top">
+            <item name="What is GETARI?" ref="index.html"/>
+            <item name="How to use GETARI?" ref="usage.html"/>
+        </menu>
+        <menu ref="modules" inherit="top" />
+        <menu ref="reports" inherit="top" />
+        <menu ref="parent" inherit="top" />
+    </body>
+</project>

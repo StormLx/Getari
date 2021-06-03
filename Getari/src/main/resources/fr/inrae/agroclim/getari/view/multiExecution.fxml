@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+<!-- $Id: csv.fxml 756 2020-01-06 17:12:34Z omaury $ -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.inrae.agroclim.getari.controller.MultiExecutionController">
+    <top>
+        <HBox fx:id="buttonPane" prefWidth="${root.width}" spacing="2.0" styleClass="toolBar-Pane" BorderPane.alignment="CENTER">
+            <children>
+                <HBox id="leftButtonPane" alignment="CENTER_LEFT" prefWidth="${buttonPane.width / 2}">
+                    <children>
+                        <TextField fx:id="evaluation" editable="false" prefWidth="300" />
+                        <Button id="choose" mnemonicParsing="false" onAction="#onChooseEvaluationAction" text="%action.choose.evaluation">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/evaluation-icon-32x32.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+                <HBox id="rightButtonPane" alignment="CENTER_RIGHT" prefWidth="${buttonPane.width / 2}" spacing="5.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#onAddAction" text="%action.add.execution">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/plus-icon.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="run" mnemonicParsing="false" onAction="#onRunAction" text="%action.run.multiexecution">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/run-icon.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="save" mnemonicParsing="false" onAction="#onSaveAction" text="%action.save">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/save-icon.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onCloseAction" text="%action.close">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/exit-icon.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="table" editable="true">
+            <columns>
+                <TableColumn fx:id="climateColumn" minWidth="150.0" prefWidth="-1.0" reorderable="false" sortable="true" text="%evaluation.climatic.label" />
+                <TableColumn fx:id="phenoColumn" minWidth="150.0" prefWidth="-1.0" reorderable="false" sortable="true" text="%evaluation.pheno.label" />
+                <TableColumn fx:id="outputColumn" minWidth="150.0" prefWidth="-1.0" reorderable="false" sortable="true" text="%execution.output.label" />
+                <TableColumn fx:id="actionColumn" minWidth="150.0" prefWidth="-1.0" reorderable="false" sortable="false" text="%action.actions" />
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <HBox prefWidth="${root.width}" spacing="2.0" styleClass="toolBar-Pane" BorderPane.alignment="CENTER">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="${buttonPane.width / 2}">
+                            <children>
+                                <ProgressBar fx:id="progressBar" prefHeight="${cancel.height}" prefWidth="${buttonPane.width / 4}" progress="0.0" />
+                                <Button fx:id="cancel" mnemonicParsing="false" onAction="#onCancelAction" text="%action.cancel" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" prefWidth="${buttonPane.width / 2}">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onClearAction" text="%action.clear.logs" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <TextArea fx:id="log" editable="false" prefHeight="200.0" prefWidth="${root.width}" />
+            </children>
+        </VBox>
+    </bottom>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+</BorderPane>

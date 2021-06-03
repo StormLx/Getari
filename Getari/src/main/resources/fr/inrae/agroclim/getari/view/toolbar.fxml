@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+This file is part of GETARI.
+
+GETARI is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GETARI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GETARI. If not, see <https://www.gnu.org/licenses/>.
+-->
+<!-- $Id: log.fxml 699 2019-09-27 09:40:47Z omaury $ -->
+
+<?import java.lang.String?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:id="root" prefWidth="${root.parent.width}" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.inrae.agroclim.getari.controller.ToolbarController">
+    <children>
+        <HBox alignment="CENTER_LEFT" prefWidth="${root.width/2}" spacing="5.0">
+            <children>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onNewAction" text="%action.new.phase">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/new-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onClearAction" text="%action.clearall">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/delete-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <ComboBox fx:id="phaseCombo" prefWidth="160.0" />
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="${root.width/2}" spacing="5.0">
+            <children>
+            <SplitMenuButton fx:id="undoBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onUndoAction" prefHeight="40.0" prefWidth="60.0" wrapText="true">
+               <graphic>
+                  <ImageView fitHeight="45.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/undo-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+               <effect>
+                  <Blend />
+               </effect>
+            </SplitMenuButton>
+            <Label fx:id="myLabel" prefHeight="16.0" prefWidth="100.0" text="ChangeMe" />
+            <TextField fx:id="addName" prefHeight="24.0" prefWidth="128.0" />
+            <Button fx:id="addObjectBtn" mnemonicParsing="false" onAction="#onAddObject" prefHeight="24.0" prefWidth="69.0" text="Add" />
+            <SplitMenuButton fx:id="redoBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onRedoAction" prefHeight="41.0" prefWidth="57.0" wrapText="true">
+               <graphic>
+                  <ImageView fitHeight="45.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/redo-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </SplitMenuButton>  	
+                <Button fx:id="evaluateBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onEvaluateAction" text="%action.evaluate">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/run-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="saveBtn" alignment="CENTER" mnemonicParsing="false" text="%action.saveas">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/save-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onCloseAction" text="%action.close">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/exit-icon.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+    <styleClass>
+        <String fx:value="toolBar" />
+        <String fx:value="toolBar-Pane" />
+    </styleClass>
+</HBox>
