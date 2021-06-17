@@ -3,12 +3,13 @@
 
 ## Le fonctionnement théorique
 
-Lorsque vous effectuez une action:
-- Modifier le nom de l'évaluation
-- Ajouter/supprimer/modifier un indicateur
-- Ajouter/supprimer/modifier un processus
-- Modifier le paramètrage d'une agrégation
- un point de sauvegarde se crée et vous pouvez ainsi annuler ou récupérer les événements passés.
+Un point de sauvegarde se crée et vous pouvez ainsi annuler ou récupérer les événements passés lorsque vous effectuez une action:
+- Modifier le nom de l'évaluation.
+- Ajouter/supprimer/modifier un indicateur.
+- Ajouter/supprimer/modifier un processus.
+- Modifier le paramètrage d'une agrégation.
+
+
 
 Bouton annuler (Undo):
 - Annule l'état actuel et recharge l'état précédent (CTRL + Z ou en cliquant sur la flèche retour).
