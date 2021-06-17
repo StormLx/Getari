@@ -5,13 +5,31 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Memento {
-@Setter
-@Getter
+    /**
+     * Evaluation.
+     */
+    @Getter
+    private final Evaluation evaluation;
+    /**
+     * Etat du memento.
+     */
+    @Getter
+    @Setter
+    private String state;
+    /**
+     * ID du memento.
+     */
+    @Getter
+    private final int id;
 
-	private Evaluation evaluation;
+    public Memento(final Evaluation e, final String s, final int i) {
+        super();
+        this.evaluation = e;
+        this.state = s;
+        this.id = i;
+    }
 
-	public Memento(Evaluation evaluation) {
-		this.evaluation = evaluation;
-	}
+
+
 
 }

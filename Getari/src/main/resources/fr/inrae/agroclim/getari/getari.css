@@ -126,6 +126,9 @@
     -fx-font-size: 12px;
 }
 
+
+
+
 .context-menu {
     -fx-background-color: #EEEEEE;
     -fx-background-insets: 0, 1, 2;
@@ -293,8 +296,15 @@
 
 .split-menu-button .menu-item:hover .label,
 .mainToolBar .menu .menu-item:hover .label {
-    -fx-text-fill: grey;
+    -fx-text-fill: #212121;
 }
+
+#undoBtn .menu-item:hover,
+#redoBtn .menu-item:hover{
+    -fx-text-fill: #212121;
+	-fx-background-color: #DD6E42;
+}
+
 
 .climatic-column {
     -fx-border-color:gray;

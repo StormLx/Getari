@@ -30,7 +30,8 @@ import fr.inrae.agroclim.getari.controller.NodeRightClickHandler;
 import fr.inrae.agroclim.getari.controller.ToolbarController;
 import fr.inrae.agroclim.getari.event.EvaluationSaveEvent;
 import fr.inrae.agroclim.getari.memento.History;
-import fr.inrae.agroclim.getari.memento.Origin;
+import fr.inrae.agroclim.getari.memento.HistorySingleton;
+import fr.inrae.agroclim.getari.memento.Memento;
 import fr.inrae.agroclim.getari.resources.Messages;
 import fr.inrae.agroclim.getari.util.FileType;
 import fr.inrae.agroclim.getari.util.GetariFileChooser;
@@ -68,6 +69,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -169,25 +172,20 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
      */
     @Getter
     private final Stage stage;
-	/**
-	 * Current state.
-	 */
-	private Origin origin = new Origin();
-	/**
-	 * History of actions.
-	 */
-	@Getter
-	private History history = new History();
+
+    /**
+     * History.
+     */
+    private History history = HistorySingleton.INSTANCE.getHistory();
 
     /**
      * Constructor.
      *
      * @param primaryStage primary stage
-     * @param view main view of GETARI
+     * @param view         main view of GETARI
      * @throws IOException if logView fails to build
      */
-    public GraphView(final Stage primaryStage, final MainView view)
-            throws IOException {
+    public GraphView(final Stage primaryStage, final MainView view) throws IOException {
         this.addIndicatorHandler = new AddIndicatorHandler(this);
         this.detailsHandler = new IndicatorDetailsHandler(this);
         this.menuHandler = new NodeRightClickHandler(this);
@@ -195,6 +193,9 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         this.mainView = view;
         logViewParent = logView.build();
         existErrors = this.logView.getController().existErrors();
+
+
+
     }
 
     /**
@@ -213,8 +214,7 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         root.getChildren().add(buildToolBar());
 
         final VBox vPane = new VBox();
-        vPane.prefHeightProperty().bind(
-                stage.getScene().heightProperty().add(-350));
+        vPane.prefHeightProperty().bind(stage.getScene().heightProperty().add(-350));
 
         // OK 11h44
         graphPane.getStyleClass().add("graphPane");
@@ -234,15 +234,14 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         graphPane.setAlignment(Pos.CENTER);
         graphPane.addEventHandler(MouseEvent.MOUSE_CLICKED, menuHandler);
 
-        graphVisitor = new GraphVisitor(graphPane, detailsHandler,
-                addIndicatorHandler);
+
+        graphVisitor = new GraphVisitor(graphPane, detailsHandler, addIndicatorHandler);
 
         scrollPane = new ScrollPane();
         scrollPane.getStyleClass().add("scrollPane");
         scrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-        scrollPane.prefWidthProperty().bind(
-                stage.widthProperty().divide(3).multiply(2.17));
+        scrollPane.prefWidthProperty().bind(stage.widthProperty().divide(3).multiply(2.17));
         scrollPane.prefHeightProperty().bind(vPane.heightProperty());
         /*
          * Bug in javafx : for background color, use -fx-background instead of
@@ -355,8 +354,7 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         thirdColumnHeader.setAlignment(Pos.BASELINE_LEFT);
         thirdColumnHeader.getStyleClass().add(CSS_GRAPH_HEADER);
 
-        final Label fourthColumnHeader = new Label(
-                Messages.getString("graph.header.indicators"));
+        final Label fourthColumnHeader = new Label(Messages.getString("graph.header.indicators"));
         fourthColumnHeader.setAlignment(Pos.BASELINE_LEFT);
         fourthColumnHeader.setPrefWidth(prefWidth);
         fourthColumnHeader.setPrefHeight(prefHeight);
@@ -389,27 +387,28 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         final ToolbarView toolbarView = new ToolbarView();
         final Parent pane = toolbarView.build();
         final ToolbarController controller = toolbarView.getController();
-        controller.setHistory(getHistory());
+        controller.setListener();
         controller.setClearCmd(() -> onClearAction(null));
         controller.setCloseCmd(mainView::closeCurrentTab);
         controller.setNewCmd(this::showNewPhaseDialog);
+        controller.setReloadBISCmd(() -> {
+            reloadGraph();
+        });
         controller.setEvaluateCmd(() -> {
             LOGGER.trace("EvaluateCmd()");
             GetariApp.get().runCurrentEvaluation();
         });
         phaseCombo = controller.getPhaseCombo();
         NameablePhaseCell.setCellFactory(phaseCombo);
-        phaseCombo
-        .getSelectionModel()
-        .selectedItemProperty()
-        .addListener(
-                (final ObservableValue<? extends Indicator> observable,
-                        final Indicator oldValue, final Indicator newValue) -> {
-                            final VBox cell = graphVisitor.getCell(newValue);
-                            ensureVisible(scrollPane, cell);
-                        });
+        phaseCombo.getSelectionModel().selectedItemProperty()
+        .addListener((final ObservableValue<? extends Indicator> observable, final Indicator oldValue,
+                final Indicator newValue) -> {
+                    final VBox cell = graphVisitor.getCell(newValue);
+                    ensureVisible(scrollPane, cell);
+                });
         saveButton = controller.getSaveBtn();
         configureSaveButton(saveButton, stage);
+        configureUndoRedoButtons(stage);
         controller.getEvaluateBtnDisableProperty().bind(existErrors);
         return pane;
     }
@@ -431,11 +430,10 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
     /**
      * Configure button to act as a Save/Save As button.
      *
-     * @param save button to configure
+     * @param save         button to configure
      * @param primaryStage stage for the GetariFileChooser dialog
      */
-    private void configureSaveButton(final Button save,
-            final Stage primaryStage) {
+    private void configureSaveButton(final Button save, final Stage primaryStage) {
         if (GetariApp.get().getCurrentEval().isNew()) {
             save.setText(Messages.getString("action.saveas"));
             save.setOnAction((final ActionEvent t) -> {
@@ -508,6 +506,24 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
     public final void handle(final EvaluationSaveEvent e) {
         saveButton.setDisable(true);
         configureSaveButton(saveButton, stage);
+        configureUndoRedoButtons(stage);
+    }
+    /**
+     * Listen for keys.
+     * @param primaryStage
+     */
+    public void configureUndoRedoButtons(final Stage primaryStage) {
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (e.isControlDown()) {
+                if (KeyCode.Z == e.getCode()) {
+                    history.undo();
+                    reloadGraph();
+                } else if (KeyCode.Y == e.getCode()) {
+                    history.redo();
+                    reloadGraph();
+                }
+            }
+        });
     }
 
     /**
@@ -515,66 +531,55 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
      * observers.
      *
      * @throws CloneNotSupportedException should never occurs as indicator must
-     * implement clone()
+     *                                    implement clone()
      */
     public final void loadGraph() throws CloneNotSupportedException {
         LOGGER.info("start");
 
         final Evaluation evaluation = GetariApp.get().getCurrentEval();
-        // setCurrent GetariApp.get().setCurrentEval(evaluation);
-        origin.setEvaluation(evaluation);
-        history.addMemento(origin.save());
-        LOGGER.trace("added a memento");
-        LOGGER.trace(history.getSize());
-        final List<Indicator> phases = new ArrayList<>(
-                evaluation.getIndicators());
+        if (history.getSize() < 1) {
+            final Evaluation e = evaluation.clone();
+            /* Point de sauvegarde initial */
+            Memento m = new Memento(e, Messages.getString("history.name.change", e.getName()), 1);
+            history.addMemento(m);
+            LOGGER.trace("Clean evaluation state and ID added to memento list.");
+        }
+        final List<Indicator> phases = new ArrayList<>(evaluation.getIndicators());
         evaluation.clearIndicators();
 
         for (final Indicator phase : phases) {
-            LOGGER.trace("Evaluation phase : {} {}", phase.getId(),
-                    phase.getName());
+            LOGGER.trace("Evaluation phase : {} {}", phase.getId(), phase.getName());
             /* Création des phases phénologiques */
             Indicator currentPhase = phase.clone();
             ((CompositeIndicator) currentPhase).clearIndicators();
-            ((CompositeIndicator) currentPhase)
-            .add(((CompositeIndicator) phase).getIndicators()
-                    .iterator().next());
+            ((CompositeIndicator) currentPhase).add(((CompositeIndicator) phase).getIndicators().iterator().next());
 
-            currentPhase = evaluation.add(
-                    IndicatorCategory.PHENO_PHASES, evaluation,
-                    currentPhase);
+            currentPhase = evaluation.add(IndicatorCategory.PHENO_PHASES, evaluation, currentPhase);
 
-            final List<Indicator> practices = ((CompositeIndicator) phase)
-                    .getIndicators();
+            final List<Indicator> practices = ((CompositeIndicator) phase).getIndicators();
             for (final Indicator practice : practices) {
                 Indicator currentPractice = practice.clone();
                 ((CompositeIndicator) currentPractice).clearIndicators();
 
                 /* Création des pratiques culturales */
-                currentPractice = evaluation.add(
-                        IndicatorCategory.CULTURAL_PRATICES,
-                        (CompositeIndicator) currentPhase, currentPractice);
+                currentPractice = evaluation.add(IndicatorCategory.CULTURAL_PRATICES, (CompositeIndicator) currentPhase,
+                        currentPractice);
 
-                final List<Indicator> effects = ((CompositeIndicator) practice)
-                        .getIndicators();
+                final List<Indicator> effects = ((CompositeIndicator) practice).getIndicators();
 
                 for (final Indicator effect : effects) {
                     Indicator currentEffect = effect.clone();
                     ((CompositeIndicator) currentEffect).clearIndicators();
 
                     /* Création des effets climatiques */
-                    currentEffect = evaluation
-                            .add(IndicatorCategory.CLIMATIC_EFFECTS,
-                                    (CompositeIndicator) currentPractice,
-                                    currentEffect);
+                    currentEffect = evaluation.add(IndicatorCategory.CLIMATIC_EFFECTS,
+                            (CompositeIndicator) currentPractice, currentEffect);
 
-                    final List<Indicator> indicators = ((CompositeIndicator) effect)
-                            .getIndicators();
+                    final List<Indicator> indicators = ((CompositeIndicator) effect).getIndicators();
 
                     for (final Indicator indicator : indicators) {
                         /* Création des indicateurs climatiques */
-                        evaluation.add(IndicatorCategory.INDICATORS,
-                                (CompositeIndicator) currentEffect, indicator);
+                        evaluation.add(IndicatorCategory.INDICATORS, (CompositeIndicator) currentEffect, indicator);
                     }
                 }
             }
@@ -586,6 +591,43 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
     }
 
     /**
+     * Alex reload graph.
+     */
+    public final void reloadGraph() {
+        LOGGER.info("Reloading graph.");
+        graphPane.getChildren().clear();
+        scrollPane.setContent(null);
+        scrollPane.setContent(graphPane);
+        graphVisitor.clearGraph();
+        clearDetailedPanel();
+        clearGeneralPanel();
+
+        GetariApp.get().setCurrentEval(history.getUndoMemento().getEvaluation());
+
+        final Evaluation evaluation = GetariApp.get().getCurrentEval().clone();
+
+        for (Indicator phase : evaluation.getIndicators()) {
+            graphVisitor.addGraphElement(phase);
+            final List<Indicator> practices = ((CompositeIndicator) phase).getIndicators();
+            for (final Indicator practice : practices) {
+                graphVisitor.addGraphElement(practice);
+                final List<Indicator> effects = ((CompositeIndicator) practice).getIndicators();
+                for (final Indicator effect : effects) {
+                    graphVisitor.addGraphElement(effect);
+                    final List<Indicator> indicators = ((CompositeIndicator) effect).getIndicators();
+                    for (final Indicator indicator : indicators) {
+                        graphVisitor.addGraphElement(indicator);
+                    }
+                }
+            }
+        }
+        LOGGER.trace("Graph drawn");
+        buildEvaluationPanel(evaluation);
+        GetariApp.getMainView().getCurrentTab().setText("* " + evaluation.getName());
+
+    }
+
+    /**
      * Append a string to the file.
      *
      * @param text string to append
@@ -593,6 +635,7 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
     private void logAppend(final String... text) {
         GetariApp.logAppend(getClass(), getStage(), text);
     }
+
     /**
      * @param event onAction of button not used
      */
@@ -604,7 +647,7 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         phaseCombo.getItems().clear();
         GetariApp.get().getCurrentEval().clearIndicators();
         GetariApp.get().getCurrentEval().setTranscient(true);
-        
+
     }
 
     @Override
@@ -622,14 +665,22 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         case ADD:
             // draw graphic
             LOGGER.trace("onIndicatorEvent ADD {}", indicator.getId());
+            LOGGER.trace(history.getSize());
             graphVisitor.addGraphElement(indicator);
-            if (indicator instanceof CompositeIndicator
-                    && ((CompositeIndicator) indicator).isPhase()) {
+
+            if (indicator instanceof CompositeIndicator && ((CompositeIndicator) indicator).isPhase()) {
                 phaseCombo.getItems().add(indicator);
             }
             indicator.addIndicatorListener(getIndicatorListener());
 
             buildEvaluationPanel(GetariApp.get().getCurrentEval());
+            if (history.getSize() > 1) {
+                // Modifié par ALEX
+                final Evaluation e = GetariApp.get().getCurrentEval().clone();
+                int newID = history.getMemento().getId() + 1;
+                Memento m = new Memento(e, Messages.getString("history.add.evaluation", indicator.getName()), newID);
+                history.addMemento(m);
+            }
             break;
         case AGGREGATION_MISSING:
             // Do nothing.
@@ -641,6 +692,13 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
             }
             final Evaluation e = (Evaluation) indicator;
             saveButton.setDisable(!e.isTranscient());
+            if (history.getSize() > 1) {
+                // Modifié par ALEX - probleme de clone
+                final Evaluation ev = GetariApp.get().getCurrentEval().clone();
+                int newID = history.getMemento().getId() + 1;
+                Memento m = new Memento(ev, Messages.getString("history.add.evaluation", indicator.getName()), newID);
+                history.addMemento(m);
+            }
             break;
         case CLIMATIC_MISSING:
             // Do nothing.
@@ -674,19 +732,19 @@ public class GraphView implements IndicatorListener, AggregationFunctionListener
         case REMOVE:
             LOGGER.trace("onIndicatorEvent REMOVE {}", indicator.getId());
             graphVisitor.removeGraphElement(indicator);
-            if (indicator instanceof CompositeIndicator
-                    && ((CompositeIndicator) indicator).isPhase()) {
+            if (indicator instanceof CompositeIndicator && ((CompositeIndicator) indicator).isPhase()) {
                 phaseCombo.getItems().remove(indicator);
             }
             clearDetailedPanel();
             buildEvaluationPanel(GetariApp.get().getCurrentEval());
+
+
             break;
         case UPDATED_VALUE:
             // Do nothing.
             break;
         default:
-            LOGGER.info("IndicatorEvent.Type {} not handled!",
-                    event.getAssociatedType());
+            LOGGER.info("IndicatorEvent.Type {} not handled!", event.getAssociatedType());
         }
     }
 

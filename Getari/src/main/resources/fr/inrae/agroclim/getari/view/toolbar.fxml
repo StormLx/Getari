@@ -19,12 +19,11 @@ along with GETARI. If not, see <https://www.gnu.org/licenses/>.
 <!-- $Id: log.fxml 699 2019-09-27 09:40:47Z omaury $ -->
 
 <?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitMenuButton?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -57,11 +56,11 @@ along with GETARI. If not, see <https://www.gnu.org/licenses/>.
         </HBox>
         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="${root.width/2}" spacing="5.0">
             <children>
-            <SplitMenuButton fx:id="undoBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onUndoAction" prefHeight="40.0" prefWidth="60.0" wrapText="true">
+            <SplitMenuButton fx:id="undoBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onUndoAction" prefHeight="40.0" prefWidth="60.0" textFill="#d9963f" wrapText="true">
                <graphic>
                   <ImageView fitHeight="45.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/undo-icon.png" />
+                        <Image url="@../images/undo.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -69,15 +68,19 @@ along with GETARI. If not, see <https://www.gnu.org/licenses/>.
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
                <effect>
-                  <Blend />
+                  <Blend mode="BLUE" />
                </effect>
+               <opaqueInsets>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </opaqueInsets>
             </SplitMenuButton>
+            <Button fx:id="displayBtn" mnemonicParsing="false" onAction="#onDisplayAction" text="display" />
             
             <SplitMenuButton fx:id="redoBtn" alignment="CENTER" mnemonicParsing="false" onAction="#onRedoAction" prefHeight="41.0" prefWidth="57.0" wrapText="true">
                <graphic>
                   <ImageView fitHeight="45.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/redo-icon.png" />
+                        <Image url="@../images/redo.png" />
                      </image>
                   </ImageView>
                </graphic>

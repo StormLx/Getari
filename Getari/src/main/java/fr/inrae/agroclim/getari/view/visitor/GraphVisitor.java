@@ -25,6 +25,8 @@ import java.util.Map;
 
 import fr.inrae.agroclim.getari.controller.AddIndicatorHandler;
 import fr.inrae.agroclim.getari.controller.IndicatorDetailsHandler;
+import fr.inrae.agroclim.getari.memento.History;
+import fr.inrae.agroclim.getari.memento.HistorySingleton;
 import fr.inrae.agroclim.getari.view.graph.GraphElement;
 import fr.inrae.agroclim.getari.view.graph.GraphNode;
 import fr.inrae.agroclim.getari.view.graph.GraphRoot;
@@ -69,8 +71,7 @@ public class GraphVisitor {
      */
     private final Map<String, VBox> cellByIndicator;
     /**
-     * Pane containing the representation of indicators and arrows and
-     * aggregations.
+     * Pane containing the representation of indicators and arrows and aggregations.
      */
     private final GridPane gridPane;
     /**
@@ -87,16 +88,21 @@ public class GraphVisitor {
     private final Map<String, VBox> boxByPosition = new HashMap<>();
 
     /**
+     * History.
+     */
+    @Getter
+    private History history = HistorySingleton.INSTANCE.getHistory();
+
+
+    /**
      * Constructor.
      *
      * @param g Pane containing the represenation of indicators and arrows and
-     * aggregations.
+     *          aggregations.
      * @param h Handler to build detailed pannel.
      * @param a Handler to add an indicator.
      */
-    public GraphVisitor(final GridPane g,
-            final IndicatorDetailsHandler h,
-            final AddIndicatorHandler a) {
+    public GraphVisitor(final GridPane g, final IndicatorDetailsHandler h, final AddIndicatorHandler a) {
         this.graphElementsByIndicator = new HashMap<>();
         this.cellByIndicator = new HashMap<>();
         this.gridPane = g;
@@ -164,6 +170,7 @@ public class GraphVisitor {
         cellByIndicator.clear();
         graphElementsByIndicator.clear();
         gridPane.getChildren().clear();
+
     }
 
     /**
@@ -217,4 +224,14 @@ public class GraphVisitor {
         }
         element.remove();
     }
+
+    //    /**
+    //     * setter.
+    //     *
+    //     * @param historyO
+    //     */
+    //    public void setHistory(final History historyO) {
+    //        this.history = historyO;
+    //    }
+
 }

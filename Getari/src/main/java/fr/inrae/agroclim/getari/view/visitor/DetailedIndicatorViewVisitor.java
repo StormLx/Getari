@@ -31,7 +31,8 @@ import fr.inrae.agroclim.getari.component.BorderedTitledPane;
 import fr.inrae.agroclim.getari.component.EvaluationTextField;
 import fr.inrae.agroclim.getari.component.GetariApp;
 import fr.inrae.agroclim.getari.memento.History;
-import fr.inrae.agroclim.getari.memento.Origin;
+import fr.inrae.agroclim.getari.memento.HistorySingleton;
+import fr.inrae.agroclim.getari.memento.Memento;
 import fr.inrae.agroclim.getari.resources.Messages;
 import fr.inrae.agroclim.getari.util.AlertUtils;
 import fr.inrae.agroclim.getari.util.ComponentUtil;
@@ -90,7 +91,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -99,7 +99,7 @@ import lombok.extern.log4j.Log4j2;
  *
  * @see CompositeIndicator
  *
- * Last change $Date$
+ *      Last change $Date$
  *
  * @author $Author$
  * @version $Revision$
@@ -138,9 +138,11 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      */
     private Boolean hasClimateChanged = false;
 
-
-    
-    private final History history;
+    /**
+     * History.
+     */
+    @Getter
+    private History history = HistorySingleton.INSTANCE.getHistory();
 
     /**
      * Constructor.
@@ -151,20 +153,16 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         super();
         this.view = graphview;
         getGridPane().setPadding(new Insets(5, 5, 5, 5));
-        titledPane = new BorderedTitledPane(getGridPane(),
-                "border-detailed-titled-content");
+        titledPane = new BorderedTitledPane(getGridPane(), "border-detailed-titled-content");
         titledPane.getStyleClass().add("bordered-titled-no-border");
         titledPane.setPadding(new Insets(0, SCROLLBAR_WIDTH, 0, 0));
         scrollPane = new ScrollPane();
         scrollPane.setContent(titledPane);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.prefWidthProperty().bind(
-                view.getRightPane().widthProperty());
-        titledPane.prefWidthProperty().bind(
-                scrollPane.widthProperty());
+        scrollPane.prefWidthProperty().bind(view.getRightPane().widthProperty());
+        titledPane.prefWidthProperty().bind(scrollPane.widthProperty());
         getGridPane().prefWidthProperty().bind(titledPane.widthProperty());
-        this.history = graphview.getHistory();
     }
 
     /**
@@ -173,14 +171,11 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      * @param indicator phenological phase
      */
     private void addColorPicker(final CompositeIndicator indicator) {
-        final ColorPicker colorPicker = new ColorPicker(Color.web(indicator
-                .getColor()));
+        final ColorPicker colorPicker = new ColorPicker(Color.web(indicator.getColor()));
 
         colorPicker.setOnAction((final ActionEvent event) -> {
-            GetariApp.logAppend(getClass(), null, "color", colorPicker
-                    .getValue().toString());
-            indicator.setColor(ComponentUtil.toRGBCode(colorPicker
-                    .getValue()));
+            GetariApp.logAppend(getClass(), null, "color", colorPicker.getValue().toString());
+            indicator.setColor(ComponentUtil.toRGBCode(colorPicker.getValue()));
             setColor(indicator.getIndicators(), indicator.getColor());
             indicator.fireValueUpdated();
             GetariApp.get().getCurrentEval().setTranscient(true);
@@ -203,17 +198,14 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         final boolean hasProcesses = !GetariApp.get().getCurrentEval().getSettings().getKnowledge()
                 .getEcophysiologicalProcesses().isEmpty();
 
-        final RadioButton usePractices = new RadioButton(
-                Messages.getString("detail.phase.practices.action"));
+        final RadioButton usePractices = new RadioButton(Messages.getString("detail.phase.practices.action"));
         usePractices.setToggleGroup(group);
 
-        final RadioButton useProcesses = new RadioButton(
-                Messages.getString("detail.phase.processes.action"));
+        final RadioButton useProcesses = new RadioButton(Messages.getString("detail.phase.processes.action"));
         useProcesses.setToggleGroup(group);
 
         if (indicator.getIndicatorCategory() != null) {
-            if (indicator.getIndicatorCategory().equals(
-                    IndicatorCategory.CULTURAL_PRATICES)) {
+            if (indicator.getIndicatorCategory().equals(IndicatorCategory.CULTURAL_PRATICES)) {
                 usePractices.setSelected(true);
             } else {
                 useProcesses.setSelected(true);
@@ -229,28 +221,23 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
 
         // Toggle phase : ecophysiological processes <-> cultural practices
         final IndicatorCategory procss = IndicatorCategory.ECOPHYSIOLOGICAL_PROCESSES;
-        group.selectedToggleProperty()
-        .addListener(
-                (final ObservableValue<? extends Toggle> ov,
-                        final Toggle oldToggle, final Toggle newToggle) -> {
-                            if (group.getSelectedToggle() != null) {
-                                if (group.getSelectedToggle().equals(
-                                        useProcesses)) {
-                                    indicator.setIndicatorCategory(procss);
-                                } else {
-                                    indicator.setIndicatorCategory(
-                                            IndicatorCategory.CULTURAL_PRATICES
-                                            );
-                                }
-                                GetariApp.get().getCurrentEval()
-                                .setTranscient(true);
-                            }
-                        });
+        group.selectedToggleProperty().addListener(
+                (final ObservableValue<? extends Toggle> ov, final Toggle oldToggle, final Toggle newToggle) -> {
+                    if (group.getSelectedToggle() != null) {
+                        if (group.getSelectedToggle().equals(useProcesses)) {
+                            indicator.setIndicatorCategory(procss);
+                        } else {
+                            indicator.setIndicatorCategory(IndicatorCategory.CULTURAL_PRATICES);
+                        }
+                        GetariApp.get().getCurrentEval().setTranscient(true);
+                    }
+                });
 
         usePractices.setAlignment(Pos.CENTER);
         getGridPane().add(usePractices, 0, getCpt().nextRow(), 2, 1);
         getGridPane().add(useProcesses, 0, getCpt().nextRow(), 2, 1);
     }
+
     /**
      * Add a remove button for the indicator into the grid pane.
      *
@@ -264,11 +251,9 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
 
         remove.setOnAction((final ActionEvent event) -> {
             final Node node = (Node) event.getSource();
-            final Indicator indicator1 = (Indicator) node.getProperties().get(
-                    INDICATOR);
+            final Indicator indicator1 = (Indicator) node.getProperties().get(INDICATOR);
             try {
-                final CompositeIndicator composite = (CompositeIndicator) indicator1
-                        .getParent();
+                final CompositeIndicator composite = (CompositeIndicator) indicator1.getParent();
                 composite.remove(indicator1);
                 GetariApp.get().getCurrentEval().remove(indicator1);
             } catch (final Exception e) {
@@ -291,8 +276,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      */
     private void bindFirstColumnWidth(final GridPane gridPane) {
         gridPane.getColumnConstraints().get(0).prefWidthProperty()
-        .bind(titledPane.prefWidthProperty()
-                .subtract(ComponentUtil.PREF_WIDTH));
+        .bind(titledPane.prefWidthProperty().subtract(ComponentUtil.PREF_WIDTH));
     }
 
     /**
@@ -314,10 +298,8 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
     private void build(final AverageOfDiff a) {
         titledPane.setTitle(a.getName() + " (" + a.getId() + ")");
         final Label var1 = newLabel("detail.average.var1.label");
-        final ComboBox<Variable> comboVar1 = buildComboBox(a,
-                Messages.getString("detail.average.var1.attribute"));
-        final ComboBox<Variable> comboVar2 = buildComboBox(a,
-                Messages.getString("detail.average.var2.attribute"));
+        final ComboBox<Variable> comboVar1 = buildComboBox(a, Messages.getString("detail.average.var1.attribute"));
+        final ComboBox<Variable> comboVar2 = buildComboBox(a, Messages.getString("detail.average.var2.attribute"));
         final Label var2 = newLabel("detail.average.var2.label");
         getGridPane().add(var1, 0, getCpt().nextRow());
         getGridPane().add(comboVar1, 1, getCpt().getRow());
@@ -344,16 +326,11 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         }
         if (compositeIndicator.isPhase()) {
             CompositeIndicator startStage;
-            startStage = (CompositeIndicator) compositeIndicator
-                    .getFirstIndicator();
-            titledPane.setTitle(Messages.getString("detail.phase.stages",
-                    startStage.getName(),
-                    compositeIndicator.getName(),
-                    compositeIndicator.getId())
-                    );
+            startStage = (CompositeIndicator) compositeIndicator.getFirstIndicator();
+            titledPane.setTitle(Messages.getString("detail.phase.stages", startStage.getName(),
+                    compositeIndicator.getName(), compositeIndicator.getId()));
         } else {
-            titledPane.setTitle(compositeIndicator.getName() + " ("
-                    + compositeIndicator.getId() + ")");
+            titledPane.setTitle(compositeIndicator.getName() + " (" + compositeIndicator.getId() + ")");
         }
 
         buildFunctions(compositeIndicator);
@@ -444,16 +421,14 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         titledPane.setTitle(s.getName() + " (" + s.getId() + ")");
         // Variable 1
         DetailedCriteriaViewVisitor criteriaVisitor1;
-        criteriaVisitor1 = new DetailedCriteriaViewVisitor(getGridPane(),
-                getCpt());
+        criteriaVisitor1 = new DetailedCriteriaViewVisitor(getGridPane(), getCpt());
         s.getSumVariable1().getCriteria().accept(criteriaVisitor1);
         bindFirstColumnWidth(criteriaVisitor1.getGridPane());
         getCpt().nextRow();
 
         // Variable 2
         DetailedCriteriaViewVisitor criteriaVisitor2;
-        criteriaVisitor2 = new DetailedCriteriaViewVisitor(getGridPane(),
-                getCpt());
+        criteriaVisitor2 = new DetailedCriteriaViewVisitor(getGridPane(), getCpt());
         s.getSumVariable2().getCriteria().accept(criteriaVisitor1);
         bindFirstColumnWidth(criteriaVisitor2.getGridPane());
         getCpt().nextRow();
@@ -468,65 +443,53 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      * @param e evaluation
      */
     private void build(final Evaluation e) {
-    	Origin origin = new Origin();
+
         LOGGER.trace("visit(Evaluation e)");
         titledPane.setTitle(null);
         getGridPane().getColumnConstraints().get(0).minWidthProperty()
-        .bind(titledPane.prefWidthProperty()
-                .subtract(COL_EVALUTION_BTN_WIDTH));
-
+        .bind(titledPane.prefWidthProperty().subtract(COL_EVALUTION_BTN_WIDTH));
         final Button updateButton = new Button(Messages.getString("action.update"));
-
+        updateButton.setDefaultButton(true);
         // Evaluation name
         final Label evaluationLabel = newLabel("evaluation.name.label");
         final TextField evaluationField = ComponentUtil.newTextField();
         evaluationField.setText(e.getName());
         evaluationField.setEditable(true);
         evaluationField.setDisable(false);
-        ComponentUtil.bindTextToString(evaluationField, e.getSettings(),
-                "name");
-        evaluationField.textProperty().addListener(
-                (final ObservableValue<? extends String> observable, final String oldValue,
-                        final String newValue) -> updateButton.setDisable(false));
-
+        ComponentUtil.bindTextToString(evaluationField, e.getSettings(), "name");
+        evaluationField.textProperty().addListener((final ObservableValue<? extends String> observable,
+                final String oldValue, final String newValue) -> updateButton.setDisable(false));
         // Evaluation timescale
         final Label evaluationTimescaleLabel = new Label(
-                Messages.getString("punctuation.colon", Messages.getString("evaluation.timescale.label"))
-                + " " + e.getTimescale().getName());
+                Messages.getString("punctuation.colon", Messages.getString("evaluation.timescale.label")) + " "
+                        + e.getTimescale().getName());
         // Evaluation type
         final Label evaluationTypeLabel = new Label(
-                Messages.getString("punctuation.colon",
-                        Messages.getString("evaluation.type.label"))
-                + " " + e.getType().getName());
-
+                Messages.getString("punctuation.colon", Messages.getString("evaluation.type.label")) + " "
+                        + e.getType().getName());
         // Phenology file
         final Label phaseLabel = newLabel("evaluation.pheno.label");
         final EvaluationTextField phenoField = ComponentUtil.newTextField();
         final Tooltip phaseTooltip = new Tooltip();
-        phaseTooltip.setText(e.getSettings().getPhenologyLoader().getFile()
-                .getAbsolutePath());
-        phenoField.setText(e.getSettings().getPhenologyLoader().getFile()
-                .getAbsolutePath());
+        phaseTooltip.setText(e.getSettings().getPhenologyLoader().getFile().getAbsolutePath());
+        phenoField.setText(e.getSettings().getPhenologyLoader().getFile().getAbsolutePath());
         phenoField.setTooltip(phaseTooltip);
         phenoField.setEditable(false);
         phenoField.setDisable(false);
         final Button phenoBrowse = new Button(Messages.getString("action.browse"));
         ComponentUtil.chooseDataFileButton(phenoBrowse, phenoField, view.getStage(), FileType.PHENOLOGY, e);
         phenoField.textProperty().addListener(
-                (final ObservableValue<? extends String> observable, final String oldValue,
-                        final String newValue) -> {
-                            hasPhenoChanged = true;
-                            updateButton.setDisable(false);
-                        });
+                (final ObservableValue<? extends String> observable, final String oldValue, final String newValue) -> {
+                    hasPhenoChanged = true;
+                    updateButton.setDisable(false);
+                });
 
         // Climatic file
         final Label climaticLabel = newLabel("evaluation.climatic.label");
         final EvaluationTextField climaticField = ComponentUtil.newTextField();
         final Tooltip climaticTooltip = new Tooltip();
-        if (e.getSettings().getClimateLoader().getFile()
-                .getFile() != null) {
-            final String path = e.getSettings().getClimateLoader()
-                    .getFile().getFile().getAbsolutePath();
+        if (e.getSettings().getClimateLoader().getFile().getFile() != null) {
+            final String path = e.getSettings().getClimateLoader().getFile().getFile().getAbsolutePath();
             climaticTooltip.setText(path);
             climaticField.setText(path);
         } else {
@@ -537,41 +500,32 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         climaticField.setEditable(false);
         climaticField.setDisable(false);
         final Button climaticBrowse = new Button(Messages.getString("action.browse"));
-        ComponentUtil.chooseDataFileButton(climaticBrowse, climaticField,
-                view.getStage(), FileType.CLIMATE, e);
+        ComponentUtil.chooseDataFileButton(climaticBrowse, climaticField, view.getStage(), FileType.CLIMATE, e);
 
         climaticField.textProperty().addListener(
-                (final ObservableValue<? extends String> observable, final String oldValue,
-                        final String newValue) -> {
-                            hasClimateChanged = true;
-                            updateButton.setDisable(false);
-                        });
+                (final ObservableValue<? extends String> observable, final String oldValue, final String newValue) -> {
+                    hasClimateChanged = true;
+                    updateButton.setDisable(false);
+                });
 
         updateButton.setDisable(true);
 
         updateButton.setOnAction((final ActionEvent t) -> {
+
             view.getStage().getScene().setCursor(Cursor.WAIT);
-            e.setName(Locale.getDefault().getLanguage(),
-                    evaluationField.getText());
+            e.setName(Locale.getDefault().getLanguage(), evaluationField.getText());
             GetariApp.getMainView().getCurrentTab().setText("* " + e.getName());
-            origin.setEvaluation(e);
-            history.addMemento(origin.save());
-            LOGGER.trace("Size: {}", history.getSize());
+
             if (hasPhenoChanged || hasClimateChanged) {
                 e.initializeResources();
-                if (e.getResourceManager().getPhenologicalResource()
-                        .getData() == null) {
+                if (e.getResourceManager().getPhenologicalResource().getData() == null) {
                     final String msg = Messages.getString("evaluation.no.stages");
                     AlertUtils.showError(msg);
                     LOGGER.error(msg);
                     return;
                 }
-                LOGGER.trace("{} climatic data.",
-                        e.getResourceManager().getClimaticResource()
-                        .getData().size());
-                LOGGER.trace("Years of climatic data: {}",
-                        e.getResourceManager().getClimaticResource()
-                        .getYears());
+                LOGGER.trace("{} climatic data.", e.getResourceManager().getClimaticResource().getData().size());
+                LOGGER.trace("Years of climatic data: {}", e.getResourceManager().getClimaticResource().getYears());
             }
             final Task<String> waitingTask = new Task<String>() {
                 @Override
@@ -587,6 +541,16 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
             });
             final ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(waitingTask);
+
+            final Evaluation cloned = e.clone();
+            int newID = history.getMemento().getId() + 1;
+            Memento m = new Memento(cloned, Messages.getString("history.name.change", cloned.getName()), newID);
+            history.addMemento(m);
+            for (Memento list : history.getUndoHistory()) {
+                LOGGER.trace("Evaluation {} , Memento ID {}", list.getEvaluation(), list.getId());
+
+
+            }
         });
 
         getGridPane().add(evaluationLabel, 0, getCpt().nextRow());
@@ -608,8 +572,8 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         getGridPane().add(evaluationTypeLabel, 0, getCpt().nextRow());
 
         /*
-         * Generate aggregation function field if the evaluation contains more
-         * than one phase
+         * Generate aggregation function field if the evaluation contains more than one
+         * phase
          */
         buildFunctions(e);
 
@@ -663,8 +627,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
 
         // Criteria
         DetailedCriteriaViewVisitor criteriaVisitor;
-        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(),
-                getCpt());
+        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(), getCpt());
         n.getCriteria().accept(criteriaVisitor);
         bindFirstColumnWidth(criteriaVisitor.getGridPane());
         getCpt().nextRow();
@@ -672,8 +635,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         // Indicator properties
         final TimeScale timeScale = GetariApp.get().getCurrentEval().getTimescale();
         final Label nbDaysLabel = newLabel("detail.maxwavelength.threshold.label." + timeScale.name());
-        final Spinner<Integer> nbDaysField = ComponentUtil.newIntegerSpinner(0,
-                Integer.MAX_VALUE, n.getThreshold(), 1);
+        final Spinner<Integer> nbDaysField = ComponentUtil.newIntegerSpinner(0, Integer.MAX_VALUE, n.getThreshold(), 1);
         ComponentUtil.bindSpinnerToInteger(nbDaysField, n, "threshold");
         getGridPane().add(nbDaysLabel, 0, getCpt().nextRow());
         getGridPane().add(nbDaysField, 1, getCpt().getRow());
@@ -704,16 +666,14 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
 
         // Criteria
         DetailedCriteriaViewVisitor criteriaVisitor;
-        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(),
-                getCpt());
+        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(), getCpt());
         n.getCriteria().accept(criteriaVisitor);
         bindFirstColumnWidth(criteriaVisitor.getGridPane());
         getCpt().nextRow();
 
         // Indicator properties
         final Label nbDaysLabel = newLabel("detail.numberofwaves.nbdays.label");
-        final Spinner<Integer> nbDaysField = ComponentUtil.newIntegerSpinner(0,
-                Integer.MAX_VALUE, n.getNbDays(), 1);
+        final Spinner<Integer> nbDaysField = ComponentUtil.newIntegerSpinner(0, Integer.MAX_VALUE, n.getNbDays(), 1);
         ComponentUtil.bindSpinnerToInteger(nbDaysField, n, "nbDays");
         getGridPane().add(nbDaysLabel, 0, getCpt().nextRow());
         getGridPane().add(nbDaysField, 1, getCpt().getRow());
@@ -742,38 +702,26 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
     private void build(final PotentialSowingDaysFrequency p) {
         titledPane.setTitle(p.getName() + " (" + p.getId() + ")");
         final Label minSoilWaterContent = newLabel("detail.potential.min.label");
-        minSoilWaterContent.setTooltip(
-                new Tooltip(minSoilWaterContent.getText()));
-        final Spinner<Double> fieldminSoilWaterContent = ComponentUtil
-                .newDoubleSpinner(0., 100.,
-                        p.getSoilWaterContentThreshold(), 0.1);
-        bindSpinnerToDouble(fieldminSoilWaterContent, p,
-                Messages.getString("detail.potential.min.attribute"));
+        minSoilWaterContent.setTooltip(new Tooltip(minSoilWaterContent.getText()));
+        final Spinner<Double> fieldminSoilWaterContent = ComponentUtil.newDoubleSpinner(0., 100.,
+                p.getSoilWaterContentThreshold(), 0.1);
+        bindSpinnerToDouble(fieldminSoilWaterContent, p, Messages.getString("detail.potential.min.attribute"));
 
         final Label nbDays = newLabel("detail.potential.days.label");
-        final Spinner<Integer> fieldNbDays = ComponentUtil.newIntegerSpinner(0,
-                Integer.MAX_VALUE, p.getNbDays(), 1);
-        ComponentUtil.bindSpinnerToInteger(fieldNbDays, p,
-                Messages.getString("detail.potential.days.attribute"));
+        final Spinner<Integer> fieldNbDays = ComponentUtil.newIntegerSpinner(0, Integer.MAX_VALUE, p.getNbDays(), 1);
+        ComponentUtil.bindSpinnerToInteger(fieldNbDays, p, Messages.getString("detail.potential.days.attribute"));
 
         final Label raindThreshold = newLabel("detail.potential.rain.label");
-        final Spinner<Double> fieldRaindThreshold = ComponentUtil
-                .newDoubleSpinner(0., 100.,
-                        p.getRainThreshold(), 0.1);
-        bindSpinnerToDouble(fieldRaindThreshold, p,
-                Messages.getString("detail.potential.rain.attribute"));
+        final Spinner<Double> fieldRaindThreshold = ComponentUtil.newDoubleSpinner(0., 100., p.getRainThreshold(), 0.1);
+        bindSpinnerToDouble(fieldRaindThreshold, p, Messages.getString("detail.potential.rain.attribute"));
 
         final Label tminThreshold = newLabel("detail.potential.tmin.label");
-        final Spinner<Double> fieldTminThreshold = ComponentUtil
-                .newDoubleSpinner(true);
-        bindSpinnerToDouble(fieldTminThreshold, p,
-                Messages.getString("detail.potential.tmin.attribute"));
+        final Spinner<Double> fieldTminThreshold = ComponentUtil.newDoubleSpinner(true);
+        bindSpinnerToDouble(fieldTminThreshold, p, Messages.getString("detail.potential.tmin.attribute"));
 
         final Label tmoyThreshold = newLabel("detail.potential.tmoy.label");
-        final Spinner<Double> fieldTmoyThreshold = ComponentUtil
-                .newDoubleSpinner(true);
-        bindSpinnerToDouble(fieldTmoyThreshold, p,
-                Messages.getString("detail.potential.tmoy.attribute"));
+        final Spinner<Double> fieldTmoyThreshold = ComponentUtil.newDoubleSpinner(true);
+        bindSpinnerToDouble(fieldTmoyThreshold, p, Messages.getString("detail.potential.tmoy.attribute"));
 
         getGridPane().add(minSoilWaterContent, 0, getCpt().getRow());
         getGridPane().add(fieldminSoilWaterContent, 1, getCpt().getRow());
@@ -814,8 +762,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         titledPane.setTitle(s.getName() + " (" + s.getId() + ")");
 
         DetailedCriteriaViewVisitor criteriaVisitor;
-        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(),
-                getCpt());
+        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(), getCpt());
         s.getCriteria().accept(criteriaVisitor);
         bindFirstColumnWidth(criteriaVisitor.getGridPane());
         buildNormalizationFunction(s);
@@ -829,17 +776,14 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      */
     private void build(final Tamm m) {
         titledPane.setTitle(m.getName() + " (" + m.getId() + ")");
-        getGridPane().add(newLabel("detail.monilia.tamm.parameters"), 0,
-                getCpt().getRow(), 2, 1);
-        Arrays.asList("e", "gamma1", "gamma2", "imax", "m", "ro1", "ro2",
-                "tMax", "tMin").forEach(fieldName -> {
-                    final Label label = new Label(fieldName);
-                    final Spinner<Double> spinner = ComponentUtil.newDoubleSpinner(0.,
-                            100., 0., 0.1);
-                    bindSpinnerToDouble(spinner, m, fieldName);
-                    getGridPane().add(label, 0, getCpt().nextRow());
-                    getGridPane().add(spinner, 1, getCpt().getRow());
-                });
+        getGridPane().add(newLabel("detail.monilia.tamm.parameters"), 0, getCpt().getRow(), 2, 1);
+        Arrays.asList("e", "gamma1", "gamma2", "imax", "m", "ro1", "ro2", "tMax", "tMin").forEach(fieldName -> {
+            final Label label = new Label(fieldName);
+            final Spinner<Double> spinner = ComponentUtil.newDoubleSpinner(0., 100., 0., 0.1);
+            bindSpinnerToDouble(spinner, m, fieldName);
+            getGridPane().add(label, 0, getCpt().nextRow());
+            getGridPane().add(spinner, 1, getCpt().getRow());
+        });
         addSeparator();
 
         buildNormalizationFunction(m);
@@ -849,13 +793,12 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
     /**
      * Build ComboBox with available variables.
      *
-     * @param a indicator
+     * @param a        indicator
      * @param property property name (variable1/variable2)
      * @return combobox
      */
     @SuppressWarnings("unchecked")
-    private ComboBox<Variable> buildComboBox(final AverageOfDiff a,
-            final String property) {
+    private ComboBox<Variable> buildComboBox(final AverageOfDiff a, final String property) {
         JavaBeanObjectPropertyBuilder<Variable> builder;
         builder = JavaBeanObjectPropertyBuilder.create();
         builder.bean(a);
@@ -866,21 +809,17 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
         } catch (final NoSuchMethodException ex) {
             throw new IllegalArgumentException("This should never occur!", ex);
         }
-        final Set<Variable> variables = GetariApp.get().getCurrentEval()
-                .getVariables();
+        final Set<Variable> variables = GetariApp.get().getCurrentEval().getVariables();
         final Variable selected = variableProperty.getValue();
         final ComboBox<Variable> combo = new ComboBox<>();
         combo.getItems().setAll(variables);
         combo.setValue(selected);
         combo.getSelectionModel().selectedItemProperty()
-        .addListener(
-                (final ObservableValue<? extends Variable> observable,
-                        final Variable oldValue,
-                        final Variable newValue) -> {
-                            variableProperty.set(newValue);
-                            GetariApp.get().getCurrentEval()
-                            .setTranscient(true);
-                        });
+        .addListener((final ObservableValue<? extends Variable> observable, final Variable oldValue,
+                final Variable newValue) -> {
+                    variableProperty.set(newValue);
+                    GetariApp.get().getCurrentEval().setTranscient(true);
+                });
         combo.setPrefWidth(ComponentUtil.PREF_WIDTH);
         return combo;
     }
@@ -901,10 +840,9 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
             if (ind.getIndicators().size() > 1) {
                 final AggregationFunction function = ind.getAggregationFunction();
                 if (function == null) {
-                    LOGGER.error("Strange, indicator {} has {} indicators "
-                            + "but does not have any aggregation function!",
-                            ind.getId(),
-                            ind.getIndicators().size());
+                    LOGGER.error(
+                            "Strange, indicator {} has {} indicators " + "but does not have any aggregation function!",
+                            ind.getId(), ind.getIndicators().size());
                     return;
                 }
                 functionVisitor.buildForm(function);
@@ -917,22 +855,17 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
             functionVisitor.buildForm(norm);
         }
 
-        if (ind.isPhase()
-                && ind.getIndicators().size() > 2
-                || !ind.isPhase()
-                && ind.getIndicators().size() > 1) {
+        if (ind.isPhase() && ind.getIndicators().size() > 2 || !ind.isPhase() && ind.getIndicators().size() > 1) {
             /*
-             * Ajout de la fonction d'aggrégation au delà de 2 fils pour les
-             * indicateurs de type "Phase" car le premier indicateur fils
-             * correspond au stade phénologique final de la phase
+             * Ajout de la fonction d'aggrégation au delà de 2 fils pour les indicateurs de
+             * type "Phase" car le premier indicateur fils correspond au stade phénologique
+             * final de la phase
              */
             AggregationFunction function;
             function = ind.getAggregationFunction();
             if (function == null) {
-                LOGGER.fatal("Strange, indicator {} has {} indicators "
-                        + "but does not have any aggregation function!",
-                        ind.getId(),
-                        ind.getIndicators().size());
+                LOGGER.fatal("Strange, indicator {} has {} indicators " + "but does not have any aggregation function!",
+                        ind.getId(), ind.getIndicators().size());
                 return;
             }
             functionVisitor.buildForm(function);
@@ -946,7 +879,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      * Build partial view for the normalization function.
      *
      * @param i indicator which has normalization function to display in partial
-     * view
+     *          view
      */
     private void buildNormalizationFunction(final Indicator i) {
         LOGGER.traceEntry(i.getName());
@@ -954,8 +887,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
             return;
         }
         DetailedFunctionViewVisitor functionVisitor;
-        functionVisitor = new DetailedFunctionViewVisitor(i, getGridPane(),
-                getCpt(), view);
+        functionVisitor = new DetailedFunctionViewVisitor(i, getGridPane(), getCpt(), view);
         bindFirstColumnWidth(functionVisitor.getInnerGridPane());
         bindFirstColumnWidth(functionVisitor.getGridPane());
         final NormalizationFunction norm = i.getNormalizationFunction();
@@ -975,8 +907,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
     private void buildNumberOfDays(final NumberOfDays n) {
         LOGGER.traceEntry(n.getName());
         DetailedCriteriaViewVisitor criteriaVisitor;
-        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(),
-                getCpt());
+        criteriaVisitor = new DetailedCriteriaViewVisitor(getGridPane(), getCpt());
         n.getCriteria().accept(criteriaVisitor);
         bindFirstColumnWidth(criteriaVisitor.getGridPane());
         getCpt().nextRow();
@@ -988,8 +919,7 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
             DetailedFunctionViewVisitor functionVisitor;
             functionVisitor = new DetailedFunctionViewVisitor(n);
             functionVisitor.buildForm(norm);
-            getGridPane().add(functionVisitor.getGridPane(), 0,
-                    getCpt().nextRow(), 2, 1);
+            getGridPane().add(functionVisitor.getGridPane(), 0, getCpt().nextRow(), 2, 1);
             bindFirstColumnWidth(functionVisitor.getGridPane());
             bindFirstColumnWidth(functionVisitor.getInnerGridPane());
             addSeparator();
@@ -1007,18 +937,16 @@ public class DetailedIndicatorViewVisitor extends DetailedViewVisitor {
      * Update color value for the indicators and all children.
      *
      * @param indicators indicator to update
-     * @param color hexadecimal color code
+     * @param color      hexadecimal color code
      */
-    private void setColor(final List<Indicator> indicators,
-            final String color) {
+    private void setColor(final List<Indicator> indicators, final String color) {
         if (indicators == null) {
             return;
         }
         indicators.forEach(indicator -> {
             indicator.setColor(color);
             if (indicator instanceof CompositeIndicator) {
-                setColor(((CompositeIndicator) indicator).getIndicators(),
-                        color);
+                setColor(((CompositeIndicator) indicator).getIndicators(), color);
             }
         });
     }

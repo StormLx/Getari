@@ -67,7 +67,7 @@ along with GETARI. If not, see <https://www.gnu.org/licenses/>.
         <checkstyle.includeResources>false</checkstyle.includeResources>
         <checkstyle.includeTestResources>false</checkstyle.includeTestResources>
         <client.plugin.version>0.1.36</client.plugin.version>
-        <indicators.version>1.1.2-SNAPSHOT</indicators.version>
+        <indicators.version>1.1.3-SNAPSHOT</indicators.version>
         <jacoco.version>0.8.6</jacoco.version>
         <javafx.maven.plugin.version>0.0.5</javafx.maven.plugin.version>
         <javafx.version>15.0.1</javafx.version>
@@ -560,6 +560,7 @@ along with GETARI. If not, see <https://www.gnu.org/licenses/>.
                 <version>3.1.1</version>
                 <configuration>
                     <excludes>**/module-info.java</excludes>
+                    <propertyExpansion>basedir=${basedir}</propertyExpansion>
                 </configuration>
             </plugin>
             <!-- PMD and CPD reports -->

@@ -90,14 +90,11 @@ public final class ComponentUtil {
     /**
      * Sync value when user uses keyboard.
      *
-     * @param <T> parser class
-     * @param sp spinner to hack
+     * @param <T>    parser class
+     * @param sp     spinner to hack
      * @param parser String parser
      */
-    public static <T> void addKeyReleasedEventHandling(
-            final Spinner<T> sp,
-            final Function<String, T> parser
-            ) {
+    public static <T> void addKeyReleasedEventHandling(final Spinner<T> sp, final Function<String, T> parser) {
         sp.getEditor().setOnKeyReleased(e -> {
             switch (e.getCode()) {
             case CONTROL:
@@ -132,23 +129,18 @@ public final class ComponentUtil {
      * Bind object property to input control.
      *
      * @param inputControl binded input control
-     * @param c object
-     * @param fieldName object property name
+     * @param c            object
+     * @param fieldName    object property name
      */
     @SuppressWarnings("unchecked")
-    public static void bindSpinnerToDouble(
-            @NonNull final Spinner<Double> inputControl,
-            final Object c, final String fieldName) {
+    public static void bindSpinnerToDouble(@NonNull final Spinner<Double> inputControl, final Object c,
+            final String fieldName) {
         Objects.requireNonNull(inputControl.getValueFactory());
         Objects.requireNonNull(inputControl.getValueFactory().valueProperty());
         JavaBeanProperty<? extends Number> beanProperty;
         try {
-            beanProperty = JavaBeanDoublePropertyBuilder.create()
-                    .name(fieldName)
-                    .bean(c)
-                    .build();
-            Bindings.bindBidirectional(
-                    inputControl.getValueFactory().valueProperty(),
+            beanProperty = JavaBeanDoublePropertyBuilder.create().name(fieldName).bean(c).build();
+            Bindings.bindBidirectional(inputControl.getValueFactory().valueProperty(),
                     (JavaBeanProperty<Double>) beanProperty);
         } catch (final NoSuchMethodException ex) {
             LOGGER.error(ex);
@@ -159,22 +151,18 @@ public final class ComponentUtil {
      * Bind object property to input control.
      *
      * @param inputControl binded input control
-     * @param c object
-     * @param fieldName object property name
+     * @param c            object
+     * @param fieldName    object property name
      */
     @SuppressWarnings("unchecked")
-    public static void bindSpinnerToInteger(
-            @NonNull final Spinner<Integer> inputControl,
-            final Object c, final String fieldName) {
+    public static void bindSpinnerToInteger(@NonNull final Spinner<Integer> inputControl, final Object c,
+            final String fieldName) {
         Objects.requireNonNull(inputControl.getValueFactory());
         Objects.requireNonNull(inputControl.getValueFactory().valueProperty());
         JavaBeanProperty<? extends Number> beanProperty;
         try {
-            beanProperty = JavaBeanIntegerPropertyBuilder.create()
-                    .name(fieldName)
-                    .bean(c).build();
-            Bindings.bindBidirectional(
-                    inputControl.getValueFactory().valueProperty(),
+            beanProperty = JavaBeanIntegerPropertyBuilder.create().name(fieldName).bean(c).build();
+            Bindings.bindBidirectional(inputControl.getValueFactory().valueProperty(),
                     (JavaBeanProperty<Integer>) beanProperty);
         } catch (final NoSuchMethodException ex) {
             LOGGER.error(ex);
@@ -185,22 +173,17 @@ public final class ComponentUtil {
      * Bind object property to input control.
      *
      * @param inputControl binded input control
-     * @param c object
-     * @param fieldName object property name
+     * @param c            object
+     * @param fieldName    object property name
      */
     @SuppressWarnings("unchecked")
-    public static void bindTextToDouble(final TextInputControl inputControl,
-            final Object c, final String fieldName) {
+    public static void bindTextToDouble(final TextInputControl inputControl, final Object c, final String fieldName) {
         JavaBeanProperty<? extends Number> beanProperty;
         StringConverter<? extends Number> converter;
         try {
-            beanProperty = JavaBeanDoublePropertyBuilder.create()
-                    .name(fieldName)
-                    .bean(c)
-                    .build();
+            beanProperty = JavaBeanDoublePropertyBuilder.create().name(fieldName).bean(c).build();
             converter = new DoubleStringConverter();
-            Bindings.bindBidirectional(inputControl.textProperty(),
-                    (JavaBeanProperty<Double>) beanProperty,
+            Bindings.bindBidirectional(inputControl.textProperty(), (JavaBeanProperty<Double>) beanProperty,
                     (StringConverter<Double>) converter);
         } catch (final NoSuchMethodException ex) {
             LOGGER.error(ex);
@@ -211,22 +194,17 @@ public final class ComponentUtil {
      * Bind object property to input control.
      *
      * @param inputControl binded input control
-     * @param c object
-     * @param fieldName object property name
+     * @param c            object
+     * @param fieldName    object property name
      */
     @SuppressWarnings("unchecked")
-    public static void bindTextToInteger(final TextInputControl inputControl,
-            final Object c, final String fieldName) {
+    public static void bindTextToInteger(final TextInputControl inputControl, final Object c, final String fieldName) {
         JavaBeanProperty<? extends Number> beanProperty;
         StringConverter<? extends Number> converter;
         try {
-            beanProperty = JavaBeanIntegerPropertyBuilder.create()
-                    .name(fieldName)
-                    .bean(c)
-                    .build();
+            beanProperty = JavaBeanIntegerPropertyBuilder.create().name(fieldName).bean(c).build();
             converter = new IntegerStringConverter();
-            Bindings.bindBidirectional(inputControl.textProperty(),
-                    (JavaBeanProperty<Integer>) beanProperty,
+            Bindings.bindBidirectional(inputControl.textProperty(), (JavaBeanProperty<Integer>) beanProperty,
                     (StringConverter<Integer>) converter);
         } catch (final NoSuchMethodException ex) {
             LOGGER.error(ex.getMessage());
@@ -237,14 +215,14 @@ public final class ComponentUtil {
      * Bind object property to input control.
      *
      * @param inputControl binded input control
-     * @param c object
-     * @param fieldName object property name
+     * @param c            object
+     * @param fieldName    object property name
      */
-    public static void bindTextToString(final TextInputControl inputControl, final Object c, final String fieldName) {
+    public static void bindTextToString(final TextInputControl inputControl, @NonNull final Object c,
+            final String fieldName) {
         try {
-            final JavaBeanStringProperty beanProperty = JavaBeanStringPropertyBuilder.create()
-                    .name(fieldName)
-                    .bean(c).build();
+            final JavaBeanStringProperty beanProperty = JavaBeanStringPropertyBuilder.create().name(fieldName).bean(c)
+                    .build();
             Bindings.bindBidirectional(inputControl.textProperty(), beanProperty);
         } catch (final NoSuchMethodException ex) {
             LOGGER.error(ex.getMessage());
@@ -255,7 +233,7 @@ public final class ComponentUtil {
      * Launch GetariFileChooser to choose file for the type.
      *
      * @param stage attached stage for dialog (usually: primary stage)
-     * @param type GetariConstants.CLIMATIC or else for pheno
+     * @param type  GetariConstants.CLIMATIC or else for pheno
      * @return chosen file
      */
     public static Optional<File> chooseDataFile(final FileType type, final Stage stage) {
@@ -271,12 +249,7 @@ public final class ComponentUtil {
             }
 
             if (!isValid) {
-                AlertUtils.showError(
-                        Messages.getString(
-                                "filechoser.not.valid.text",
-                                file.toString()
-                                )
-                        );
+                AlertUtils.showError(Messages.getString("filechoser.not.valid.text", file.toString()));
             } else {
                 return Optional.of(file);
             }
@@ -287,14 +260,13 @@ public final class ComponentUtil {
     /**
      * Set choose action on button and related text field.
      *
-     * @param browse button
-     * @param fileName text field
-     * @param stage attached stage for dialog (usually: primary stage)
-     * @param type GetariConstants.CLIMATIC or else for pheno
+     * @param browse     button
+     * @param fileName   text field
+     * @param stage      attached stage for dialog (usually: primary stage)
+     * @param type       GetariConstants.CLIMATIC or else for pheno
      * @param evaluation to get loaders
      */
-    public static void chooseDataFileButton(final Button browse,
-            final EvaluationTextField fileName, final Stage stage,
+    public static void chooseDataFileButton(final Button browse, final EvaluationTextField fileName, final Stage stage,
             final FileType type, final Evaluation evaluation) {
         final EvaluationSettings settings = evaluation.getSettings();
         fileName.setPrefWidth(400);
@@ -383,12 +355,8 @@ public final class ComponentUtil {
             } else {
                 file = db.getFiles().get(0);
                 final String extension = StringUtils.extension(file.getName());
-                if (!"csv".equals(extension)
-                        && !"gri".equals(extension)
-                        && !"out".equals(extension)) {
-                    LOGGER.warn(
-                            Messages.getString("warning.extension.not.handled"),
-                            extension);
+                if (!"csv".equals(extension) && !"gri".equals(extension) && !"out".equals(extension)) {
+                    LOGGER.warn(Messages.getString("warning.extension.not.handled"), extension);
                     file = null;
                 }
             }
@@ -417,8 +385,7 @@ public final class ComponentUtil {
      * @return true: file is a CSV
      * @throws GetariException if error while reading the file
      */
-    public static boolean isAValidCsvFile(final File fileToParse)
-            throws GetariException {
+    public static boolean isAValidCsvFile(final File fileToParse) throws GetariException {
 
         // Lire les 3 premières lignes pour valider le fichier : même nombre de
         // colonnes obligatoire
@@ -434,8 +401,7 @@ public final class ComponentUtil {
 
         try (
                 // Create the file reader
-                BufferedReader fileReader = new BufferedReader(new FileReader(fileToParse));
-                ) {
+                BufferedReader fileReader = new BufferedReader(new FileReader(fileToParse));) {
             String line = fileReader.readLine();
 
             String[] tokens = line.split(tab);
@@ -498,8 +464,7 @@ public final class ComponentUtil {
      * @return text field
      */
     public static TextField newDoubleField() {
-        return new EvaluationTextField(Double.class,
-                GetariApp.get().getCurrentEval());
+        return new EvaluationTextField(Double.class, GetariApp.get().getCurrentEval());
     }
 
     /**
@@ -508,8 +473,7 @@ public final class ComponentUtil {
      * @param negativeAllowed if negative values are allowed
      * @return spinner field
      */
-    public static Spinner<Double> newDoubleSpinner(
-            final boolean negativeAllowed) {
+    public static Spinner<Double> newDoubleSpinner(final boolean negativeAllowed) {
         final double min;
         if (negativeAllowed) {
             min = -100;
@@ -525,20 +489,19 @@ public final class ComponentUtil {
     /**
      * Create a spinner instance to handle an Double property.
      *
-     * @param min The minimum allowed double value for the Spinner.
-     * @param max The maximum allowed double value for the Spinner.
-     * @param initialValue The value of the Spinner when first instantiated,
-     * must be within the bounds of the min and max arguments, or else the min
-     * value will be used.
+     * @param min            The minimum allowed double value for the Spinner.
+     * @param max            The maximum allowed double value for the Spinner.
+     * @param initialValue   The value of the Spinner when first instantiated, must
+     *                       be within the bounds of the min and max arguments, or
+     *                       else the min value will be used.
      * @param amountToStepBy The amount to increment or decrement by, per step.
      * @return the instancied and parametrized spinner
      */
-    public static Spinner<Double> newDoubleSpinner(final double min,
-            final double max,
-            final double initialValue,
+    public static Spinner<Double> newDoubleSpinner(final double min, final double max, final double initialValue,
             final double amountToStepBy) {
         final Spinner<Double> sp = new Spinner<>();
-        // User a value factory to use a DoubleStringConverter to allow precision with more than 2 digits
+        // User a value factory to use a DoubleStringConverter to allow precision with
+        // more than 2 digits
         final SpinnerValueFactory<Double> valueFactory;
         valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(min, max, initialValue, amountToStepBy);
         valueFactory.setConverter(new DoubleStringConverter());
@@ -548,14 +511,12 @@ public final class ComponentUtil {
         sp.setPrefWidth(PREF_WIDTH);
         sp.setPrefHeight(height);
         sp.valueProperty().addListener(
-                (final ObservableValue<? extends Double> observable,
-                        final Double oldValue, final Double newValue) -> {
-                            if ((oldValue == null && newValue != null
-                                    || newValue != null && !newValue.equals(oldValue))
-                                    && GetariApp.get().getCurrentEval() != null) {
-                                GetariApp.get().getCurrentEval().setTranscient(true);
-                            }
-                        });
+                (final ObservableValue<? extends Double> observable, final Double oldValue, final Double newValue) -> {
+                    if ((oldValue == null && newValue != null || newValue != null && !newValue.equals(oldValue))
+                            && GetariApp.get().getCurrentEval() != null) {
+                        GetariApp.get().getCurrentEval().setTranscient(true);
+                    }
+                });
         addKeyReleasedEventHandling(sp, Double::parseDouble);
         return sp;
     }
@@ -563,33 +524,28 @@ public final class ComponentUtil {
     /**
      * Create a spinner instance to handle an Integer property.
      *
-     * @param min The minimum allowed double value for the Spinner.
-     * @param max The maximum allowed double value for the Spinner.
-     * @param initialValue The value of the Spinner when first instantiated,
-     * must be within the bounds of the min and max arguments, or else the min
-     * value will be used.
+     * @param min            The minimum allowed double value for the Spinner.
+     * @param max            The maximum allowed double value for the Spinner.
+     * @param initialValue   The value of the Spinner when first instantiated, must
+     *                       be within the bounds of the min and max arguments, or
+     *                       else the min value will be used.
      * @param amountToStepBy The amount to increment or decrement by, per step.
      * @return the instancied and parametrized spinner
      */
-    public static Spinner<Integer> newIntegerSpinner(final int min,
-            final int max,
-            final int initialValue,
+    public static Spinner<Integer> newIntegerSpinner(final int min, final int max, final int initialValue,
             final int amountToStepBy) {
-        final Spinner<Integer> sp = new Spinner<>(min, max, initialValue,
-                amountToStepBy);
+        final Spinner<Integer> sp = new Spinner<>(min, max, initialValue, amountToStepBy);
         sp.setEditable(true);
         final int height = 20;
         sp.setPrefWidth(PREF_WIDTH);
         sp.setPrefHeight(height);
-        sp.valueProperty().addListener(
-                (final ObservableValue<? extends Integer> observable,
-                        final Integer oldValue, final Integer newValue) -> {
-                            if (!oldValue.equals(initialValue)
-                                    && !newValue.equals(oldValue)
-                                    && GetariApp.get().getCurrentEval() != null) {
-                                GetariApp.get().getCurrentEval().setTranscient(true);
-                            }
-                        });
+        sp.valueProperty().addListener((final ObservableValue<? extends Integer> observable, final Integer oldValue,
+                final Integer newValue) -> {
+                    if (!oldValue.equals(initialValue) && !newValue.equals(oldValue)
+                            && GetariApp.get().getCurrentEval() != null) {
+                        GetariApp.get().getCurrentEval().setTranscient(true);
+                    }
+                });
         addKeyReleasedEventHandling(sp, Integer::parseInt);
         return sp;
     }
@@ -608,8 +564,7 @@ public final class ComponentUtil {
      * @return text field
      */
     public static EvaluationTextField newTextField() {
-        return new EvaluationTextField(String.class,
-                GetariApp.get().getCurrentEval());
+        return new EvaluationTextField(String.class, GetariApp.get().getCurrentEval());
     }
 
     /**
@@ -618,12 +573,9 @@ public final class ComponentUtil {
      * @param node node to bind
      */
     public static void setCursorHoverStyleProperty(final Node node) {
-        node.styleProperty().bind(
-                Bindings.when(node.hoverProperty())
-                .then(new SimpleStringProperty(
-                        GetariConstants.HAND_CURSOR))
-                .otherwise(new SimpleStringProperty(
-                        GetariConstants.DEFAULT_CURSOR)));
+        node.styleProperty()
+        .bind(Bindings.when(node.hoverProperty()).then(new SimpleStringProperty(GetariConstants.HAND_CURSOR))
+                .otherwise(new SimpleStringProperty(GetariConstants.DEFAULT_CURSOR)));
     }
 
     /**
@@ -631,26 +583,22 @@ public final class ComponentUtil {
      *
      * @param contextMenu menu to bind
      */
-    public static void setCursorShowingStyleProperty(
-            final ContextMenu contextMenu) {
-        contextMenu.styleProperty().bind(
-                Bindings.when(contextMenu.showingProperty())
-                .then(new SimpleStringProperty(
-                        GetariConstants.HAND_CURSOR))
-                .otherwise(new SimpleStringProperty(
-                        GetariConstants.DEFAULT_CURSOR)));
+    public static void setCursorShowingStyleProperty(final ContextMenu contextMenu) {
+        contextMenu.styleProperty()
+        .bind(Bindings.when(contextMenu.showingProperty())
+                .then(new SimpleStringProperty(GetariConstants.HAND_CURSOR))
+                .otherwise(new SimpleStringProperty(GetariConstants.DEFAULT_CURSOR)));
     }
 
     /**
      * Set event handlers to open dragged files on StartView.
      *
      * @param controller controller to open evaluation file
-     * @param sc scene
+     * @param sc         scene
      * @param closeStage stage of scene must be close after opening?
      */
-    public static void setUpDragDropHandling(
-            final MainViewController controller,
-            final Scene sc, final boolean closeStage) {
+    public static void setUpDragDropHandling(final MainViewController controller, final Scene sc,
+            final boolean closeStage) {
         sc.setOnDragDropped(e -> {
             final Dragboard db = e.getDragboard();
             final File file = getFile(db);
@@ -678,8 +626,7 @@ public final class ComponentUtil {
                     controller.openMEFile(file);
                     break;
                 default:
-                    throw new UnsupportedOperationException(
-                            "Extension not handled: " + extension);
+                    throw new UnsupportedOperationException("Extension not handled: " + extension);
                 }
             } else {
                 e.setDropCompleted(false);
@@ -702,8 +649,8 @@ public final class ComponentUtil {
      * @return hexadecimal code (as in HTML)
      */
     public static String toRGBCode(final Color color) {
-        return String.format("#%02X%02X%02X", (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
+        return String.format("#%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 
     /**

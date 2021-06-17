@@ -29,6 +29,9 @@ import java.util.Objects;
 
 import fr.inrae.agroclim.getari.component.GetariApp;
 import fr.inrae.agroclim.getari.component.MultiLinearFormBuilder;
+import fr.inrae.agroclim.getari.memento.History;
+import fr.inrae.agroclim.getari.memento.HistorySingleton;
+import fr.inrae.agroclim.getari.memento.Memento;
 import fr.inrae.agroclim.getari.resources.Messages;
 import fr.inrae.agroclim.getari.util.ComponentUtil;
 import fr.inrae.agroclim.getari.util.NameableListCell;
@@ -73,7 +76,7 @@ import lombok.extern.log4j.Log4j2;
  *
  * @see CompositeIndicator
  *
- * Last change $Date$
+ *      Last change $Date$
  *
  * @author $Author$
  * @version $Revision$
@@ -90,16 +93,15 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
     /**
      * Path for Javadoc of Math package.
      */
-    static final String MATH_JAVADOC_BASE_PATH
-    = "https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/lang/Math.html";
+    static final String MATH_JAVADOC_BASE_PATH =
+            "https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/lang/Math.html";
 
     /**
      * @param functions functions for combobox
-     * @param selected selected function
+     * @param selected  selected function
      * @return combobox with normalization functions
      */
-    private static ComboBox<NormalizationFunction> buildComboBox(
-            final List<NormalizationFunction> functions,
+    private static ComboBox<NormalizationFunction> buildComboBox(final List<NormalizationFunction> functions,
             final NormalizationFunction selected) {
         final ComboBox<NormalizationFunction> comboFunctions = new ComboBox<>();
         GridPane.setHalignment(comboFunctions, HPos.LEFT);
@@ -110,6 +112,7 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         comboFunctions.setMaxHeight(10);
         return comboFunctions;
     }
+
     /**
      * @param label text for label
      * @return label with wrapped text
@@ -129,13 +132,11 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
     public static String jexlFunctionToApiDocUrl(final String jexlFuncName) {
         final String[] parts = jexlFuncName.split(":");
         if (parts == null || parts.length != 2 || !"math".equals(parts[0])) {
-            throw new IllegalArgumentException(
-                    "JEXL function name not handled: " + jexlFuncName);
+            throw new IllegalArgumentException("JEXL function name not handled: " + jexlFuncName);
         }
         final String[] parts2 = parts[1].split("\\(");
         if (parts2 == null || parts2.length != 2) {
-            throw new IllegalArgumentException(
-                    "Wrong function name: " + jexlFuncName);
+            throw new IllegalArgumentException("Wrong function name: " + jexlFuncName);
         }
         final String[] parts3 = parts2[1].split(",");
         String anchor = "#" + parts2[0] + "-";
@@ -181,7 +182,11 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
      * Graph view.
      */
     private GraphView view;
-
+    /**
+     * History.
+     */
+    @Getter
+    private History history = HistorySingleton.INSTANCE.getHistory();
     /**
      * Constructor.
      *
@@ -192,12 +197,12 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         try {
             chartViewParent = chartView.build();
         } catch (final IOException e) {
-            throw new RuntimeException("Building chartView should never fails",
-                    e);
+            throw new RuntimeException("Building chartView should never fails", e);
         }
         indicator = i;
         innerGridPane = new GridPane();
         ComponentUtil.initGridPane(innerGridPane);
+        //this.history = view.getHistory();
     }
 
     /**
@@ -208,19 +213,18 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
      * @param c Counter for GridPane building.
      * @param v graph view
      */
-    public DetailedFunctionViewVisitor(final Indicator i, final GridPane p,
-            final Cpt c, final GraphView v) {
+    public DetailedFunctionViewVisitor(final Indicator i, final GridPane p, final Cpt c, final GraphView v) {
         super(p, c);
         try {
             chartViewParent = chartView.build();
         } catch (final IOException e) {
-            throw new RuntimeException("Building chartView should never fails",
-                    e);
+            throw new RuntimeException("Building chartView should never fails", e);
         }
         indicator = i;
         innerGridPane = new GridPane();
         ComponentUtil.initGridPane(innerGridPane);
         this.view = v;
+        //this.history = v.getHistory();
     }
 
     /**
@@ -234,15 +238,11 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
     }
 
     /**
-     * @param norm normalization function to display
+     * @param norm  normalization function to display
      * @param yAxis limits of Y axis
      */
-    private void buildChart(final NormalizationFunction norm,
-            final NumberAxis yAxis) {
-        LOGGER.traceEntry("{} : y {}:{}:{}",
-                norm.getName(),
-                yAxis.getLowerBound(),
-                yAxis.getUpperBound(),
+    private void buildChart(final NormalizationFunction norm, final NumberAxis yAxis) {
+        LOGGER.traceEntry("{} : y {}:{}:{}", norm.getName(), yAxis.getLowerBound(), yAxis.getUpperBound(),
                 yAxis.getTickUnit());
         chartViewParent.setVisible(true);
         chartView.getController().buildChart(norm, yAxis);
@@ -253,11 +253,9 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
      * @param a A in A.exp(B/x).
      * @param b V in A.exp(B/x).
      */
-    private void buildExpChart(@NonNull final Number a,
-            @NonNull final Number b) {
+    private void buildExpChart(@NonNull final Number a, @NonNull final Number b) {
         LOGGER.traceEntry("a={}, b={}", a, b);
-        final Exponential exp = new Exponential(a.doubleValue(),
-                b.doubleValue());
+        final Exponential exp = new Exponential(a.doubleValue(), b.doubleValue());
         final double exp1 = exp.normalize(1);
         final NumberAxis yAxis = new NumberAxis(0, exp1 + 0.1, exp1 / 10);
         buildChart(exp, yAxis);
@@ -276,8 +274,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         if (func instanceof JEXLFunction) {
             buildForm((JEXLFunction) func);
         } else {
-            throw new UnsupportedOperationException("Handling "
-                    + func.getClass().getCanonicalName() + " not implemented!");
+            throw new UnsupportedOperationException(
+                    "Handling " + func.getClass().getCanonicalName() + " not implemented!");
         }
     }
 
@@ -292,18 +290,13 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         comboFunctions.setPromptText(Messages.getString("action.function.add"));
 
         final Button helpBtn = new Button("?");
-        helpBtn.setOnAction(e
-                -> PlatformUtil.openBrowser(
-                        jexlFunctionToApiDocUrl(comboFunctions.getValue())));
-        helpBtn.visibleProperty()
-        .bind(comboFunctions.valueProperty().isNotNull());
-        helpBtn.setTooltip(new Tooltip(
-                Messages.getString("action.function.api")));
+        helpBtn.setOnAction(e -> PlatformUtil.openBrowser(jexlFunctionToApiDocUrl(comboFunctions.getValue())));
+        helpBtn.visibleProperty().bind(comboFunctions.valueProperty().isNotNull());
+        helpBtn.setTooltip(new Tooltip(Messages.getString("action.function.api")));
 
         final TextArea aggregationFormula = new TextArea(INIT_VALUE);
         aggregationFormula.setPrefSize(view.getRightPane().getWidth(), 50);
-        aggregationFormula.prefWidthProperty()
-        .bind(view.getRightPane().widthProperty());
+        aggregationFormula.prefWidthProperty().bind(view.getRightPane().widthProperty());
         aggregationFormula.setText(func.getExpression());
 
         final Label name = createFunctionLabel("indicator.aggregation.title");
@@ -316,28 +309,24 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         getGridPane().add(varTitle, 0, getCpt().nextRow());
         if (indicator instanceof CompositeIndicator) {
             final CompositeIndicator composite = (CompositeIndicator) indicator;
-            composite.getIndicators().stream()
-            .filter(ind -> indicator.getIndicatorCategory() == null
-            || !IndicatorCategory.PHENO_PHASES
-            .equals(ind.getIndicatorCategory()))
-            .forEach(ind -> {
-                final Label var = new Label(ind.getId());
-                final Tooltip tltp = new Tooltip(ind.getName(locale.getLanguage()));
-                var.setTooltip(tltp);
-                var.setCursor(Cursor.HAND);
-                var.setOnMouseClicked(e -> {
-                    String text = ind.getId();
-                    if (StringUtils.isNumeric(text.substring(0, 1))) {
-                        text = "$" + text;
-                    }
-                    final int pos = aggregationFormula.getCaretPosition();
-                    aggregationFormula.insertText(pos, text);
-                });
-                getGridPane().add(var, 0, getCpt().nextRow());
-            });
+            composite.getIndicators().stream().filter(ind -> indicator.getIndicatorCategory() == null
+                    || !IndicatorCategory.PHENO_PHASES.equals(ind.getIndicatorCategory())).forEach(ind -> {
+                        final Label var = new Label(ind.getId());
+                        final Tooltip tltp = new Tooltip(ind.getName(locale.getLanguage()));
+                        var.setTooltip(tltp);
+                        var.setCursor(Cursor.HAND);
+                        var.setOnMouseClicked(e -> {
+                            String text = ind.getId();
+                            if (StringUtils.isNumeric(text.substring(0, 1))) {
+                                text = "$" + text;
+                            }
+                            final int pos = aggregationFormula.getCaretPosition();
+                            aggregationFormula.insertText(pos, text);
+                        });
+                        getGridPane().add(var, 0, getCpt().nextRow());
+                    });
         } else {
-            LOGGER.warn("Strange, the indicator is not CompositeIndicator: {}",
-                    indicator.getId());
+            LOGGER.warn("Strange, the indicator is not CompositeIndicator: {}", indicator.getId());
         }
 
         final Method[] methods = Math.class.getDeclaredMethods();
@@ -354,33 +343,31 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
             }
         }
 
-        comboFunctions
-        .getSelectionModel()
-        .selectedItemProperty()
-        .addListener(
-                (final ObservableValue<? extends String> observable,
-                        final String oldValue, final String newValue) -> {
-                            if (newValue != null) {
-                                final int pos = aggregationFormula.getCaretPosition();
-                                aggregationFormula.insertText(pos, newValue);
-                            }
-                        });
+        comboFunctions.getSelectionModel().selectedItemProperty().addListener(
+                (final ObservableValue<? extends String> observable, final String oldValue, final String newValue) -> {
+                    if (newValue != null) {
+                        final int pos = aggregationFormula.getCaretPosition();
+                        aggregationFormula.insertText(pos, newValue);
+
+                    }
+                });
 
         aggregationFormula.textProperty().addListener(
-                (final ObservableValue<? extends String> observable,
-                        final String oldValue, final String newValue) -> {
-                            LOGGER.trace("{} -> {}", oldValue, newValue);
-                            if (!INIT_VALUE.equals(oldValue)) {
-                                // TODO : test function before change
-                                // how to get variables? which values to use?
-                                func.setExpression(newValue);
-                                final Evaluation eval = GetariApp.get().getCurrentEval();
-                                eval.setTranscient(true);
-                                eval.fireIndicatorEvent(
-                                        IndicatorEvent.Type.CHANGE.event(eval));
-                                GetariApp.get().getCurrentEval().validate();
-                            }
-                        });
+                (final ObservableValue<? extends String> observable, final String oldValue, final String newValue) -> {
+                    LOGGER.trace("{} -> {}", oldValue, newValue);
+                    if (!INIT_VALUE.equals(oldValue)) {
+                        // TODO : test function before change
+                        // how to get variables? which values to use?
+                        func.setExpression(newValue);
+                        final Evaluation eval = GetariApp.get().getCurrentEval();
+                        eval.setTranscient(true);
+                        eval.fireIndicatorEvent(IndicatorEvent.Type.CHANGE.event(eval));
+                        GetariApp.get().getCurrentEval().validate();
+                        int idx = history.getMemento().getId() + 1;
+                        Memento m = new Memento(eval, Messages.getString("history.name.change", eval.getName()), idx);
+                        history.addMemento(m);
+                    }
+                });
     }
 
     /**
@@ -393,8 +380,7 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         final List<NormalizationFunction> functions = new ArrayList<>();
         functions.add(selectedFunction);
         ALL_FUNCTIONS.stream() //
-        .filter(f -> !f.getClass().equals(selectedFunction.getClass()))
-        .forEach(functions::add);
+        .filter(f -> !f.getClass().equals(selectedFunction.getClass())).forEach(functions::add);
         final Label name = createFunctionLabel("indicator.normalization.title");
         formula = new WebView();
         showFormula(selectedFunction);
@@ -402,23 +388,21 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         formula.prefWidthProperty().bind(getGridPane().widthProperty());
         final ComboBox<NormalizationFunction> comboFunction = buildComboBox(functions, selectedFunction);
 
-        comboFunction.valueProperty().addListener(
-                (final ObservableValue<? extends NormalizationFunction> ov,
-                        final NormalizationFunction oldValue,
-                        final NormalizationFunction newValue) -> {
-                            if (Objects.equals(oldValue, newValue)) {
-                                return;
-                            }
-                            LOGGER.trace("combo change");
-                            getInnerGridPane().getChildren().clear();
-                            // set the new function
-                            getIndicator().setNormalizationFunction(newValue.clone());
-                            GetariApp.get().getCurrentEval().setTranscient(true);
-                            //
-                            buildFormPart(getIndicator().getNormalizationFunction());
-                            // display formula
-                            showFormula(getIndicator().getNormalizationFunction());
-                        });
+        comboFunction.valueProperty().addListener((final ObservableValue<? extends NormalizationFunction> ov,
+                final NormalizationFunction oldValue, final NormalizationFunction newValue) -> {
+                    if (Objects.equals(oldValue, newValue)) {
+                        return;
+                    }
+                    LOGGER.trace("combo change");
+                    getInnerGridPane().getChildren().clear();
+                    // set the new function
+                    getIndicator().setNormalizationFunction(newValue.clone());
+                    GetariApp.get().getCurrentEval().setTranscient(true);
+                    //
+                    buildFormPart(getIndicator().getNormalizationFunction());
+                    // display formula
+                    showFormula(getIndicator().getNormalizationFunction());
+                });
 
         getGridPane().add(name, 0, getCpt().getRow());
         getGridPane().add(comboFunction, 1, getCpt().getRow());
@@ -439,8 +423,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         final Spinner<Double> fieldA = ComponentUtil.newDoubleSpinner(true);
         final Spinner<Double> fieldB = ComponentUtil.newDoubleSpinner(true);
 
-        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o,
-                final Double oldValue, final Double newValue) -> {
+        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o, final Double oldValue,
+                final Double newValue) -> {
                     if (oldValue != null && !oldValue.equals(newValue)) {
                         hideChart();
                         final Number a = fieldA.getValue();
@@ -452,10 +436,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
                 fieldA.valueProperty().addListener(lis);
                 fieldB.valueProperty().addListener(lis);
 
-                ComponentUtil.bindSpinnerToDouble(fieldA, exp,
-                        Messages.getString("detail.exp.a.attribute"));
-                ComponentUtil.bindSpinnerToDouble(fieldB, exp,
-                        Messages.getString("detail.exp.b.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldA, exp, Messages.getString("detail.exp.a.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldB, exp, Messages.getString("detail.exp.b.attribute"));
                 getInnerGridPane().add(labelA, 0, 0);
                 getInnerGridPane().add(fieldA, 1, 0);
                 getInnerGridPane().add(labelB, 0, 1);
@@ -476,8 +458,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         final Spinner<Double> fieldA = ComponentUtil.newDoubleSpinner(true);
         final Spinner<Double> fieldB = ComponentUtil.newDoubleSpinner(true);
 
-        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o,
-                final Double oldValue, final Double newValue) -> {
+        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o, final Double oldValue,
+                final Double newValue) -> {
                     if (oldValue != null && !oldValue.equals(newValue)) {
                         hideChart();
                         final Number a = fieldA.getValue();
@@ -490,10 +472,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
                 fieldA.valueProperty().addListener(lis);
                 fieldB.valueProperty().addListener(lis);
 
-                ComponentUtil.bindSpinnerToDouble(fieldA, n,
-                        Messages.getString("detail.linear.a.attribute"));
-                ComponentUtil.bindSpinnerToDouble(fieldB, n,
-                        Messages.getString("detail.linear.b.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldA, n, Messages.getString("detail.linear.a.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldB, n, Messages.getString("detail.linear.b.attribute"));
                 getInnerGridPane().add(labelA, 0, 0);
                 getInnerGridPane().add(fieldA, 1, 0);
                 getInnerGridPane().add(labelB, 0, 1);
@@ -533,18 +513,14 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         final Spinner<Double> fieldB = ComponentUtil.newDoubleSpinner(true);
         final Spinner<Double> fieldC = ComponentUtil.newDoubleSpinner(true);
 
-        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o,
-                final Double oldValue, final Double newValue) -> {
+        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o, final Double oldValue,
+                final Double newValue) -> {
                     if (oldValue != null && !oldValue.equals(newValue)) {
                         hideChart();
                         final Number a = fieldA.getValue();
                         final Number b = fieldB.getValue();
                         final Number c = fieldC.getValue();
-                        final Normal norm = new Normal(
-                                a.doubleValue(),
-                                b.doubleValue(),
-                                c.doubleValue()
-                                );
+                        final Normal norm = new Normal(a.doubleValue(), b.doubleValue(), c.doubleValue());
                         buildChart(norm);
                     }
                 };
@@ -553,12 +529,9 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
                 fieldB.valueProperty().addListener(lis);
                 fieldC.valueProperty().addListener(lis);
 
-                ComponentUtil.bindSpinnerToDouble(fieldA, n,
-                        Messages.getString("detail.normal.a.attribute"));
-                ComponentUtil.bindSpinnerToDouble(fieldB, n,
-                        Messages.getString("detail.normal.b.attribute"));
-                ComponentUtil.bindSpinnerToDouble(fieldC, n,
-                        Messages.getString("detail.normal.c.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldA, n, Messages.getString("detail.normal.a.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldB, n, Messages.getString("detail.normal.b.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldC, n, Messages.getString("detail.normal.c.attribute"));
                 getInnerGridPane().add(labelA, 0, 0);
                 getInnerGridPane().add(fieldA, 1, 0);
                 getInnerGridPane().add(labelB, 0, 1);
@@ -591,8 +564,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         } else if (norm instanceof Sigmoid) {
             buildFormPart((Sigmoid) norm);
         } else {
-            throw new UnsupportedOperationException("Handling "
-                    + norm.getClass().getCanonicalName() + " not implemented!");
+            throw new UnsupportedOperationException(
+                    "Handling " + norm.getClass().getCanonicalName() + " not implemented!");
         }
     }
 
@@ -612,8 +585,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
         final Spinner<Double> fieldA = ComponentUtil.newDoubleSpinner(min, max, initialValue, amountToStepBy);
         final Spinner<Double> fieldB = ComponentUtil.newDoubleSpinner(min, max, initialValue, amountToStepBy);
 
-        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o,
-                final Double oldValue, final Double newValue) -> {
+        final ChangeListener<Double> lis = (final ObservableValue<? extends Double> o, final Double oldValue,
+                final Double newValue) -> {
                     if (oldValue != null && !oldValue.equals(newValue)) {
                         hideChart();
                         final Number a = fieldA.getValue();
@@ -626,10 +599,8 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
                 fieldA.valueProperty().addListener(lis);
                 fieldB.valueProperty().addListener(lis);
 
-                ComponentUtil.bindSpinnerToDouble(fieldA, n,
-                        Messages.getString("detail.sigmoid.a.attribute"));
-                ComponentUtil.bindSpinnerToDouble(fieldB, n,
-                        Messages.getString("detail.sigmoid.b.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldA, n, Messages.getString("detail.sigmoid.a.attribute"));
+                ComponentUtil.bindSpinnerToDouble(fieldB, n, Messages.getString("detail.sigmoid.b.attribute"));
                 getInnerGridPane().add(labelA, 0, 0);
                 getInnerGridPane().add(fieldA, 1, 0);
                 getInnerGridPane().add(labelB, 0, 1);
@@ -648,14 +619,12 @@ public class DetailedFunctionViewVisitor extends DetailedViewVisitor {
 
     /**
      * Display MathML formula in embedded HTML navigator.
+     *
      * @param norm function to display
      */
     private void showFormula(final NormalizationFunction norm) {
-        final String mathtagstart = "<math "
-                + "xmlns=\"http://www.w3.org/1998/Math/MathML\" "
+        final String mathtagstart = "<math " + "xmlns=\"http://www.w3.org/1998/Math/MathML\" "
                 + "style=\"float: right\">";
-        formula.getEngine().loadContent(mathtagstart
-                + norm.getFormulaMathML()
-                + "</math>");
+        formula.getEngine().loadContent(mathtagstart + norm.getFormulaMathML() + "</math>");
     }
 }
