@@ -117,6 +117,19 @@ Incapacité à localiser l'endroit où placer certains points de sauvegarde pour
 
 Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car ce bouton appelle la méthode clearGraph() de GraphView qui est elle même appelée à chaque rechargement d'un événement passé.
 
+Problème lors de la sauvegarde d'une évaluation.
+Déroulé du problème:
+
+- Lancement de Getari.
+- Lancement d'une évaluation.
+- Modification du nom de l'évaluation.
+- Enregistrement de l'évaluation.
+- Crash.
+`Exception in thread "JavaFX Application Thread" java.lang.RuntimeException: java.lang.reflect.InvocationTargetException`
+`Caused by: java.lang.OutOfMemoryError: Java heap space`
+`at fr.inrae.agroclim.indicators@1.1.3-SNAPSHOT/fr.inrae.agroclim.indicators.model.data.climate.ClimaticResource.clone(ClimaticResource.java:59)`
+
+
 > [Sommaire](#Sommaire) 
 
 ## Les méthodes
