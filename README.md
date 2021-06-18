@@ -145,6 +145,8 @@ Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car
 |reloadGraph() | Nettoie les panneaux et les rechargent avec l'évaluation voulue. |
 |configureUndoRedoButtons(stage)| Ajoute un listener sur le stage pour écouter la combinaison de touche CTRL+Z et CTRL+Y pour undo() et redo().
 
+[Retour](#Sommaire)
+
 
 
 
