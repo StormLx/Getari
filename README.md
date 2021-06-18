@@ -37,8 +37,9 @@ Tous les éléments situés entre l'état actuel et l'état sélectionné dans l
     int newID = history.getMemento().getId() + 1;
     Memento m = new Memento(e, Messages.getString("msg", indicator.getName()), newID);
     history.addMemento(m);
+    
 
- Chaque action crée un objet Memento et le stock en première position dans une liste observable de la classe History: la liste undo. Chaque ajout vide la deuxième liste (redo) .
+ Chaque action crée un objet Memento et le stock en première position dans une liste observable de la classe History: la liste undo. Chaque ajout vide la deuxième  liste (redo) .
  Cette classe History possède deux liste observable qui géreront les éléments à annuler, et ceux à récupérer.
  
  Lors du clique sur le bouton **Annuler**, la méthode undo() de la classe History est appelée.
@@ -87,7 +88,8 @@ Quand la taille de la liste undo history **diminue**:
 - Cette liste est ajoutée au bouton redoBtn pour l'affichage du menu déroulant.
 - Le premier item de la redoList est supprimé.
 - Si la liste redo history est vide, clear() également la redoList.
-- 
+
+
 > [Sommaire](#Sommaire) 
 
 ## Le rechargement
