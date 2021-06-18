@@ -131,8 +131,8 @@ Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car
 |addMemento(memento) | Ajoute un memento dans la liste undoHistory |
 |undo()| Transfert le premier élément de la liste undo vers la liste redo |
 |redo() | Transfert le premier élément de la liste redo vers la liste undo |
-|undoById(int) | Transfert tous les éléments depuis le premier élément jusqu'au mémento voulu de la liste undo vers la liste redo |
-|redoById(int) | Transfert tous les éléments depuis le premier élément jusqu'au mémento voulu de la liste redo vers la liste undo |
+|undoById(int) | Transfert tous les éléments depuis le premier jusqu'au mémento voulu de la liste undo vers la liste redo |
+|redoById(int) | Transfert tous les éléments depuis le premier jusqu'au mémento voulu de la liste redo vers la liste undo |
 | findById(int) | Retourne le mémento correspondant à l'ID dans la liste undo |
 | findRedoById(int) | Retourne le mémento correspondant à l'ID dans la liste redo |
 | getUndoMemento() | Retourne le mémento en première position de la liste undo |
