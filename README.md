@@ -1,16 +1,18 @@
+# Table of Contents
+1. [Le fonctionnement théorique](#Le-fonctionnement-théorique)
+2. [Le fonctionnement du code](#Le-fonctionnement-du-code)
+3. [Le fonctionnement des menus déroulants (MenuItems)](#Le-fonctionnement-des-menus-déroulants-(MenuItems))
+4. [Le rechargement d'un état sauvegardé](#Le-rechargement-d'un-état-sauvegardé)
+5. [Les problèmes connus](#Les-problèmes-connus)
 
 # Fonctions Annuler / Récupérer
-![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)
-
 ## Le fonctionnement théorique
-
+![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)
 Un point de sauvegarde se crée et vous pouvez ainsi annuler ou récupérer les événements passés lorsque vous effectuez une action:
 - Modifier le nom de l'évaluation.
 - Ajouter/supprimer/modifier un indicateur.
 - Ajouter/supprimer/modifier un processus.
 - Modifier le paramètrage d'une agrégation.
-
-
 
 Bouton annuler (Undo):
 - Annule l'état actuel et recharge l'état précédent (CTRL + Z ou en cliquant sur la flèche retour).
@@ -74,7 +76,22 @@ Quand la taille de la liste undo history **diminue**:
 - Le premier item de la redoList est supprimé.
 - Si la liste redo history est vide, clear() également la redoList.
 
+## Le rechargement d'un état sauvegardé
+
+Lors de l'utilisation des boutons annuler/récupérer, la méthode reloadGraph() de la classe GraphView est appelée. Cette méthode vide les panneaux, récupère le dernier mémento de la liste undo history.
+L’évaluation associée à ce mémento est extraite, clonée, puis rechargée.
 
 
+## Les problèmes connus
+
+Lors d'un trop grand nombre d'annulations, récupérations, ajouts/suppressions d'indicateurs, Getari crash.
+
+`#1 Exception in thread "JavaFX Application Thread" java.lang.OutOfMemoryError: Required array length too large`
+`#2 Exception in thread "JavaFX Application Thread" java.lang.OutOfMemoryError: Java heap space`
+Ce problème est certainement dû au clonage de l'évaluation.
+L'ajout d'une fonction d'agrégation déclenche bien le point de sauvegarde, mais le rechargement n'annule pas cet ajout.
+
+Incapacité à localiser l'endroit où placer certains points de sauvegarde pour la modification de certains indicateurs (Normalisation, Seuil, Linéaires).
+Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car ce bouton appelle la méthode clearGraph() de GraphView qui est elle même appelée à chaque rechargement d'un événement passé.
 
 
