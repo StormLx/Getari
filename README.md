@@ -1,12 +1,13 @@
-# Table of Contents
-1. [Le fonctionnement théorique](#Le-fonctionnement-théorique)
+# Sommaire
+*1. [Le fonctionnement théorique](#Le-fonctionnement-théorique)
 2. [Le fonctionnement du code](#Le-fonctionnement-du-code)
 3. [Le fonctionnement des menus déroulants (MenuItems)](#Le-fonctionnement-des-menus-déroulants-(MenuItems))
 4. [Le rechargement d'un état sauvegardé](#Le-rechargement-d'un-état-sauvegardé)
-5. [Les problèmes connus](#Les-problèmes-connus)
+5. [Les problèmes connus](#Les-problèmes-connus)*
 
 # Fonctions Annuler / Récupérer
 ## Le fonctionnement théorique
+
 ![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)
 Un point de sauvegarde se crée et vous pouvez ainsi annuler ou récupérer les événements passés lorsque vous effectuez une action:
 - Modifier le nom de l'évaluation.
@@ -23,6 +24,7 @@ Bouton récupérer (Redo):
 - Récupère l'état qui vient d'être annulé et le recharge (CTRL + Y ou en cliquant sur la flèche avant).
 - Récupère l'état sélectionné dans le menu déroulant et le recharge.
 Tous les éléments situés entre l'état actuel et l'état sélectionné dans le menu déroulant seront de nouveau annulable par ordre d'exécution dans la liste **Annuler**.
+[Retour](#Sommaire)
 
 ## Le fonctionnement du code
 
@@ -46,6 +48,7 @@ Lors du clique sur un des éléments du menu déroulant du bouton **Récupérer*
 Cette méthode prend un argument un Integer et cherche dans la liste redo le mémento qui possède cet ID grâce à la méthode findByID(int id).
 Puis, à partir du premier élément jusqu’à celui possédant l'ID, transfert tous les éléments de la liste redo vers la liste undo par ordre d'exécution.
 Enfin, recharge le premier élément de la liste undo.
+[Retour](#Sommaire)
 
 ## Le fonctionnement des menus déroulants (MenuItems)
 ![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)
@@ -75,11 +78,13 @@ Quand la taille de la liste undo history **diminue**:
 - Cette liste est ajoutée au bouton redoBtn pour l'affichage du menu déroulant.
 - Le premier item de la redoList est supprimé.
 - Si la liste redo history est vide, clear() également la redoList.
+[Retour](#Sommaire)
 
 ## Le rechargement d'un état sauvegardé
 
 Lors de l'utilisation des boutons annuler/récupérer, la méthode reloadGraph() de la classe GraphView est appelée. Cette méthode vide les panneaux, récupère le dernier mémento de la liste undo history.
 L’évaluation associée à ce mémento est extraite, clonée, puis rechargée.
+[Retour](#Sommaire)
 
 
 ## Les problèmes connus
@@ -93,5 +98,6 @@ L'ajout d'une fonction d'agrégation déclenche bien le point de sauvegarde, mai
 
 Incapacité à localiser l'endroit où placer certains points de sauvegarde pour la modification de certains indicateurs (Normalisation, Seuil, Linéaires).
 Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car ce bouton appelle la méthode clearGraph() de GraphView qui est elle même appelée à chaque rechargement d'un événement passé.
+[Retour](#Sommaire)
 
 
