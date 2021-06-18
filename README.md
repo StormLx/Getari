@@ -32,6 +32,12 @@ Tous les éléments situés entre l'état actuel et l'état sélectionné dans l
 
  La sauvegarde de l'état actuel se fait grâce à la classe Memento.
  On crée un objet Memento qui prend l'évaluation actuelle en paramètre, ainsi que son état et un ID.
+ 
+    final Evaluation e = GetariApp.get().getCurrentEval().clone();
+    int newID = history.getMemento().getId() + 1;
+    Memento m = new Memento(e, Messages.getString("msg", indicator.getName()), newID);
+    history.addMemento(m);
+
  Chaque action crée un objet Memento et le stock en première position dans une liste observable de la classe History: la liste undo. Chaque ajout vide la deuxième liste (redo) .
  Cette classe History possède deux liste observable qui géreront les éléments à annuler, et ceux à récupérer.
  
@@ -132,6 +138,12 @@ Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car
 | getUndoMemento() | Retourne le mémento en première position de la liste undo |
 | getRedoMemento() | Retourne le mémento en première position de la liste redo |
 
+---
+***Classe GraphView***
+| Nom  | Fonctionnement |
+|--|--|
+|reloadGraph() | Nettoie les panneaux et les rechargent avec l'évaluation voulue. |
+|configureUndoRedoButtons(stage)| Ajoute un listener sur le stage pour écouter la combinaison de touche CTRL+Z et CTRL+Y pour undo() et redo().
 
 
 
