@@ -67,6 +67,7 @@ Enfin, recharge le premier élément de la liste undo.
 
 Les listes observables de la classe History ont chacune un EventListener qui se déclenche quand la taille de la liste change.
 Plusieurs événements se déclenchent.
+
 Quand la taille de la liste undo history **augmente** mais que la redo history est toujours **vide**:
 
 - Un MenuItem 'item' se crée en prenant le nom du mémento (son "état").
@@ -113,6 +114,7 @@ Ce problème est certainement dû au clonage de l'évaluation.
 L'ajout d'une fonction d'agrégation déclenche bien le point de sauvegarde, mais le rechargement n'annule pas cet ajout.
 
 Incapacité à localiser l'endroit où placer certains points de sauvegarde pour la modification de certains indicateurs (Normalisation, Seuil, Linéaires).
+
 Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car ce bouton appelle la méthode clearGraph() de GraphView qui est elle même appelée à chaque rechargement d'un événement passé.
 
 > [Sommaire](#Sommaire) 
