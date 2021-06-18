@@ -24,6 +24,8 @@ Bouton récupérer (Redo):
 - Récupère l'état qui vient d'être annulé et le recharge (CTRL + Y ou en cliquant sur la flèche avant).
 - Récupère l'état sélectionné dans le menu déroulant et le recharge.
 Tous les éléments situés entre l'état actuel et l'état sélectionné dans le menu déroulant seront de nouveau annulable par ordre d'exécution dans la liste **Annuler**.
+
+Ces fonctionnalités sont applicables sur les évaluations ouvertes.
 [Retour](#Sommaire)
 
 ## Le fonctionnement du code
