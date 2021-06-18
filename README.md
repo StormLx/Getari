@@ -7,8 +7,8 @@
 
 # Fonctions Annuler / Récupérer
 ## Le fonctionnement théorique
-
 ![forthebadge](https://forthebadge.com/images/badges/powered-by-coffee.svg)![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)
+
 Un point de sauvegarde se crée et vous pouvez ainsi annuler ou récupérer les événements passés lorsque vous effectuez une action:
 - Modifier le nom de l'évaluation.
 - Ajouter/supprimer/modifier un indicateur.
