@@ -110,13 +110,20 @@ Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car
 ## Les méthodes
 
 
+***Classe ToolbarController***
+| Nom  | Fonctionnement |
+|--|--|
+| setListener()   | Ajoute un listener sur les listes undo et redo |
+| onUndoAction( event )   | Déclenche les méthode undo() et reloadCmd.run() |
+| onRedoAction( event )   | Déclenche les méthode redo() et reloadCmd.run() |
+|initialize()   | Ajoute le tooltip et le hover sur les boutons |
 
-| Nom | Localisation | Fonctionnement |
-|--|--|--|
-| setListener() | ToolbarController | Ajoute un listener sur les listes undo et redo |
-| onUndoAction( event ) | ToolbarController | Déclenche les méthode undo() et reloadCmd.run() |
-| onRedoAction( event ) | ToolbarController | Déclenche les méthode redo() et reloadCmd.run() |
-|initialize() | ToolbarController | Ajoute le tooltip et le hover sur les boutons |
+---
+***Classe History***
+| Nom  | Fonctionnement |
+|--|--|
+|addMemento( memento ) | Ajoute un memento dans la liste undoHistory |
+
 
 
 
