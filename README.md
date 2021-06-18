@@ -4,6 +4,7 @@
 3. [Le fonctionnement des menus déroulants (MenuItems)](#Le-fonctionnement-des-menus)
 4. [Le rechargement d'un état sauvegardé](#Le-rechargement)
 5. [Les problèmes connus](#Les-problèmes-connus)
+6. [Les méthodes](#Les-méthodes)
 
 # Fonctions Annuler / Récupérer
 ## Le fonctionnement théorique
