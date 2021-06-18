@@ -24,6 +24,7 @@ Bouton récupérer (Redo):
 - Récupère l'état qui vient d'être annulé et le recharge (CTRL + Y ou en cliquant sur la flèche avant).
 - Récupère l'état sélectionné dans le menu déroulant et le recharge.
 Tous les éléments situés entre l'état actuel et l'état sélectionné dans le menu déroulant seront de nouveau annulable par ordre d'exécution dans la liste **Annuler**.
+
 [Retour](#Sommaire)
 
 ## Le fonctionnement du code
@@ -48,6 +49,7 @@ Lors du clique sur un des éléments du menu déroulant du bouton **Récupérer*
 Cette méthode prend un argument un Integer et cherche dans la liste redo le mémento qui possède cet ID grâce à la méthode findByID(int id).
 Puis, à partir du premier élément jusqu’à celui possédant l'ID, transfert tous les éléments de la liste redo vers la liste undo par ordre d'exécution.
 Enfin, recharge le premier élément de la liste undo.
+
 [Retour](#Sommaire)
 
 ## Le fonctionnement des menus
@@ -78,12 +80,14 @@ Quand la taille de la liste undo history **diminue**:
 - Cette liste est ajoutée au bouton redoBtn pour l'affichage du menu déroulant.
 - Le premier item de la redoList est supprimé.
 - Si la liste redo history est vide, clear() également la redoList.
+- 
 [Retour](#Sommaire)
 
 ## Le rechargement
 
 Lors de l'utilisation des boutons annuler/récupérer, la méthode reloadGraph() de la classe GraphView est appelée. Cette méthode vide les panneaux, récupère le dernier mémento de la liste undo history.
 L’évaluation associée à ce mémento est extraite, clonée, puis rechargée.
+
 [Retour](#Sommaire)
 
 
@@ -94,10 +98,12 @@ Lors d'un trop grand nombre d'annulations, récupérations, ajouts/suppressions 
 `#1 Exception in thread "JavaFX Application Thread" java.lang.OutOfMemoryError: Required array length too large`
 `#2 Exception in thread "JavaFX Application Thread" java.lang.OutOfMemoryError: Java heap space`
 Ce problème est certainement dû au clonage de l'évaluation.
+
 L'ajout d'une fonction d'agrégation déclenche bien le point de sauvegarde, mais le rechargement n'annule pas cet ajout.
 
 Incapacité à localiser l'endroit où placer certains points de sauvegarde pour la modification de certains indicateurs (Normalisation, Seuil, Linéaires).
 Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car ce bouton appelle la méthode clearGraph() de GraphView qui est elle même appelée à chaque rechargement d'un événement passé.
+
 [Retour](#Sommaire)
 
 
