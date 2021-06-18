@@ -24,7 +24,7 @@ Bouton récupérer (Redo):
 - Récupère l'état sélectionné dans le menu déroulant et le recharge.
 Tous les éléments situés entre l'état actuel et l'état sélectionné dans le menu déroulant seront de nouveau annulable par ordre d'exécution dans la liste **Annuler**.
 
-## Le fonctionnement du code
+## Le fonctionnement des classes Memento et History
 
  La sauvegarde de l'état actuel se fait grâce à la classe Memento.
  On crée un objet Memento qui prend l'évaluation actuelle en paramètre, ainsi que son état et un ID.
