@@ -26,7 +26,7 @@ Bouton récupérer (Redo):
 - Récupère l'état sélectionné dans le menu déroulant et le recharge.
 Tous les éléments situés entre l'état actuel et l'état sélectionné dans le menu déroulant seront de nouveau annulable par ordre d'exécution dans la liste **Annuler**.
 
-[Retour](#Sommaire)
+> [Sommaire](#Sommaire) 
 
 ## Le fonctionnement du code
 
@@ -57,7 +57,7 @@ Cette méthode prend un argument un Integer et cherche dans la liste redo le mé
 Puis, à partir du premier élément jusqu’à celui possédant l'ID, transfert tous les éléments de la liste redo vers la liste undo par ordre d'exécution.
 Enfin, recharge le premier élément de la liste undo.
 
-[Retour](#Sommaire)
+> [Sommaire](#Sommaire) 
 
 ## Le fonctionnement des menus
 ![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)
@@ -88,14 +88,14 @@ Quand la taille de la liste undo history **diminue**:
 - Le premier item de la redoList est supprimé.
 - Si la liste redo history est vide, clear() également la redoList.
 - 
-[Retour](#Sommaire)
+> [Sommaire](#Sommaire) 
 
 ## Le rechargement
 
 Lors de l'utilisation des boutons annuler/récupérer, la méthode reloadGraph() de la classe GraphView est appelée. Cette méthode vide les panneaux, récupère le dernier mémento de la liste undo history.
 L’évaluation associée à ce mémento est extraite, clonée, puis rechargée.
 
-[Retour](#Sommaire)
+> [Sommaire](#Sommaire) 
 
 
 ## Les problèmes connus
@@ -111,7 +111,7 @@ L'ajout d'une fonction d'agrégation déclenche bien le point de sauvegarde, mai
 Incapacité à localiser l'endroit où placer certains points de sauvegarde pour la modification de certains indicateurs (Normalisation, Seuil, Linéaires).
 Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car ce bouton appelle la méthode clearGraph() de GraphView qui est elle même appelée à chaque rechargement d'un événement passé.
 
-[Retour](#Sommaire)
+> [Sommaire](#Sommaire) 
 
 ## Les méthodes
 
@@ -145,7 +145,7 @@ Incapacité à sauvegarder après avoir cliquer sur le bouton "Tout effacer" car
 |reloadGraph() | Nettoie les panneaux et les rechargent avec l'évaluation voulue. |
 |configureUndoRedoButtons(stage)| Ajoute un listener sur le stage pour écouter la combinaison de touche CTRL+Z et CTRL+Y pour undo() et redo().
 
-[Retour](#Sommaire)
+> [Sommaire](#Sommaire) 
 
 
 
