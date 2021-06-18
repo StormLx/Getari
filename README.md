@@ -1,9 +1,9 @@
 # Sommaire
-*1. [Le fonctionnement théorique](#Le-fonctionnement-théorique)
+1. [Le fonctionnement théorique](#Le-fonctionnement-théorique)
 2. [Le fonctionnement du code](#Le-fonctionnement-du-code)
-3. [Le fonctionnement des menus déroulants (MenuItems)](#Le-fonctionnement-des-menus-déroulants-(MenuItems))
-4. [Le rechargement d'un état sauvegardé](#Le-rechargement-d'un-état-sauvegardé)
-5. [Les problèmes connus](#Les-problèmes-connus)*
+3. [Le fonctionnement des menus déroulants (MenuItems)](#Le-fonctionnement-des-menus)
+4. [Le rechargement d'un état sauvegardé](#Le-rechargement)
+5. [Les problèmes connus](#Les-problèmes-connus)
 
 # Fonctions Annuler / Récupérer
 ## Le fonctionnement théorique
@@ -50,7 +50,7 @@ Puis, à partir du premier élément jusqu’à celui possédant l'ID, transfert
 Enfin, recharge le premier élément de la liste undo.
 [Retour](#Sommaire)
 
-## Le fonctionnement des menus déroulants (MenuItems)
+## Le fonctionnement des menus
 ![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)
 
 Les listes observables de la classe History ont chacune un EventListener qui se déclenche quand la taille de la liste change.
@@ -80,7 +80,7 @@ Quand la taille de la liste undo history **diminue**:
 - Si la liste redo history est vide, clear() également la redoList.
 [Retour](#Sommaire)
 
-## Le rechargement d'un état sauvegardé
+## Le rechargement
 
 Lors de l'utilisation des boutons annuler/récupérer, la méthode reloadGraph() de la classe GraphView est appelée. Cette méthode vide les panneaux, récupère le dernier mémento de la liste undo history.
 L’évaluation associée à ce mémento est extraite, clonée, puis rechargée.
